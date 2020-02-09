@@ -14,23 +14,25 @@
             </v-flex>
         </v-layout>
 
-        <v-card class="pa-5" v-for="book in getallorderednreserved" :key="book.id">
-            <v-layout row :class="`${checkBookStatus(book.return_date)}`">
+        <v-card class="pa-5" v-for="books in getallorderednreserved" :key="books.id">
+            <v-layout row>
                 <v-flex xs12 md12 >
                     <div class="cption grey--text">Book Name</div>
-                    <div>{{book.name}}</div>
+                    <div>{{books.name}}</div>
                 </v-flex>
+                <v-layout row v-for="book in books.users" :key="book.id" class="pa-5" :class="`${checkBookStatus(book.pivot.borrow_date,book.pivot.due_date)}`">
+
                 <v-flex xs6 sm2 md2>
                     <div class="cption grey--text">Book Reserve Date</div>
-                    <div>{{book.borrow_date}}</div>
+                    <div>{{book.pivot.borrow_date}}</div>
                 </v-flex>
                 <v-flex xs6 sm2 md2>
                     <div class="cption grey--text">Book Due Date</div>
-                    <div>{{book.due_date}}</div>
+                    <div>{{book.pivot.due_date}}</div>
                 </v-flex>
                 <v-flex xs6 sm2 md2>
                     <div class="cption grey--text">Book Borrow Date</div>
-                    <div>{{book.order_date}}</div>
+                    <div>{{book.pivot.order_date}}</div>
                 </v-flex>
                 <v-flex xs6 sm2 md2>
                     <div class="cption grey--text">Book Email</div>
@@ -38,14 +40,15 @@
                 </v-flex>
                 <v-flex xs6 sm2 md2>
                     <div class="cption grey--text">Book Return Date</div>
-                    <div>{{book.return_date}}</div>
+                    <div>{{book.pivot.return_date}}</div>
                 </v-flex>
                 <v-flex xs6 sm2 md2>
                     <div>Action</div>
-                    <div v-if="checkIfReturnIsThere(book.return_date)">
-                        <v-chip :class="`${checkBookStatus(book.borrow_date,book.due_date)}`" @click="returnbook(book)" >{{checkActionToTake(book.borrow_date,book.due_date)}}</v-chip>
+                    <div v-if="checkIfReturnIsThere(book.pivot.return_date)">
+                        <v-chip :class="`${checkBookStatus(book.pivot.borrow_date,book.pivot.due_date)}`" @click="returnbook(books,book.email)" >{{checkActionToTake(book.pivot.borrow_date,book.pivot.due_date)}}</v-chip>
                     </div>
                 </v-flex>
+                </v-layout>
             </v-layout>
         </v-card>
     </v-container>
@@ -112,13 +115,15 @@
                 }
 
             },
-            returnbook(book)
+            returnbook(book,email)
             {
-                this.$store.dispatch('returnbook',book);
+                this.form.book = book;
+                this.form.email = email
+                this.$store.dispatch('returnbook',this.form);
             },
-            checkBookStatus(returndate){
+            checkBookStatus(returnDate){
 
-              if(returndate)
+              if(returnDate)
               {
                   return 'borrowed'
               }
@@ -144,7 +149,7 @@
                 }
                 else
                 {
-                    return "cawaiting collect"
+                    return "awaiting collect"
                 }
             },
             checkIfReturnIsThere(return_date)

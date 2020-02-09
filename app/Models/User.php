@@ -11,7 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
     use Notifiable;
-    protected $fillable=[
+    protected $fillable = [
         'name', 'email', 'password',
     ];
 
@@ -27,7 +27,7 @@ class User extends Authenticatable
 
     public function books()
     {
-        return $this->belongsToMany(Book::class)->withPivot('email');
+        return $this->belongsToMany(Book::class)->withPivot('due_date', 'borrow_date','order_date','return_date')->withTimestamps();
     }
 
     protected $hidden = [
