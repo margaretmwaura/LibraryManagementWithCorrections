@@ -18,14 +18,14 @@
                 <v-card-text>
                     <p>Category :  {{book.category}}</p>
                 </v-card-text>
-                <v-card-text>
-                    <div v-if="checkRemainingBooks(getbookscount)">
-                        <p> You have borrowed a total of {{getbookscount}} , the remaining borrow count is {{borrowcount(getbookscount)}}</p>
-                    </div>
-                    <div v-else>
-                        <p>You cannot borrow more books you have exceeded 3 books</p>
-                    </div>
-                </v-card-text>
+<!--                <v-card-text>-->
+<!--                    <div v-if="checkRemainingBooks(getbookscount)">-->
+<!--                        <p> You have borrowed a total of {{getbookscount}} , the remaining borrow count is {{borrowcount(getbookscount)}}</p>-->
+<!--                    </div>-->
+<!--                    <div v-else>-->
+<!--                        <p>You cannot borrow more books you have exceeded 3 books</p>-->
+<!--                    </div>-->
+<!--                </v-card-text>-->
                 <v-divider></v-divider>
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -33,7 +33,8 @@
                     <v-spacer></v-spacer>
                     <v-btn v-on:click="editting(book)"  v-if="$canedit('Edit',book.status_id)">Edit </v-btn>
                     <v-spacer></v-spacer>
-                    <div v-if="checkRemainingBooks(getbookscount)">
+<!--                    <div v-if="checkRemainingBooks(getbookscount)">-->
+                    <div>
                         <v-btn  v-on:click="orderBook(book)" v-if="$canborrow('Borrow',book.status_id)">Borrow </v-btn>
                         <v-spacer></v-spacer>
                     </div>

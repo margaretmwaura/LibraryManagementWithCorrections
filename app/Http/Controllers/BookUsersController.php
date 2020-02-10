@@ -16,7 +16,7 @@ class BookUsersController extends Controller
 {
     //Instead of sending out two objects , the user we will be getting is the current user
 
-    public $countvar;
+
     public function orderBook(Request $request)
     {
         $statuss=\App\Models\Status::where('name','NOTAVAILABLE')->get();
@@ -35,7 +35,7 @@ class BookUsersController extends Controller
 
         $book->status_id=$statusid;
         $book->save();
-        $book->users()->attach($user_id,['due_date'=>$trialExpires,'order_date'=>Carbon::now(),'email'=>$email,'name'=>$name]);
+        $book->users()->attach($user_id,['due_date'=>$trialExpires,'order_date'=>Carbon::now()]);
 
         $books=app('App\Http\Controllers\BooksController')->index();
         return response()->json($books);
@@ -54,7 +54,7 @@ class BookUsersController extends Controller
         $name=$book->name;
         $book->status_id=$statusid;
         $book->save();
-        $book->users()->attach($user_id,['borrow_date' => Carbon::now(),'email'=>$email,'name'=>$name]);
+        $book->users()->attach($user_id,['borrow_date' => Carbon::now()]);
 
         $books=app('App\Http\Controllers\BooksController')->index();
         return response()->json($books);
@@ -106,17 +106,23 @@ class BookUsersController extends Controller
     }
     public function getBooks()
     {
-        $user=User::find(20);
+        $user=User::find(18);
         $count=$user->books;
         Log::info("We are trying to get count ".$count);
-
-        $count->each(function ($item, $key)
-        {
-            $date = $item->due_date;
-            if($date!==null)
-            {
-                $this->countvar=$this->countvar+1;
-            }
+        $collectionBorrowed = collect([]);
+        $collectionReserved = collect([]);
+        $count->each(function ($item, $key) use ($collectionBorrowed,$collectionReserved){
+           if($item->pivot->due_date)
+           {
+               Log::info("This was a borrowed book push it to borrowed books");
+               $collectionBorrowed->push($item);
+           }
+           else{
+               Log::info("This was a reserved book push it to reserved books");
+               $collectionReserved->push($item);
+           }
         });
+
+        return response()->json(array($collectionBorrowed,$collectionReserved));
     }
 }

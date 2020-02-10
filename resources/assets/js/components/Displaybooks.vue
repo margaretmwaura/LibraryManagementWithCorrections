@@ -71,7 +71,7 @@
         },
         mounted() {
             this.$store.dispatch('getallbooks');
-            // this.$store.dispatch('getallusersbooks');
+            this.$store.dispatch('getallusersbooks');
 
         },
         methods:{
