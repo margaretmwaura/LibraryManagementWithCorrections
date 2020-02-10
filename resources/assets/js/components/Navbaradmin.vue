@@ -47,6 +47,16 @@
                             <p id="titleh">Display</p></v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
+
+                <v-list-item router to="/myaccount">
+                    <v-list-item-icon>
+                        <v-icon class="white--text">mdi-view-dashboard</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                        <v-list-item-title class="white--text">
+                            <p id="titlea">My Account</p></v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
             </v-list>
 
 
@@ -87,6 +97,11 @@
         color:white;
     }
     #titleh
+    {
+        font-size:16px;
+        color:white;
+    }
+    #titlea
     {
         font-size:16px;
         color:white;

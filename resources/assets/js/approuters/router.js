@@ -6,6 +6,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import RolesAndPermissions from "../components/RolesAndPermissions";
 import BookManagement from "../components/BookManagement";
+import MyAccount from "../components/MyAccount";
 Vue.use(VueRouter);
 
 
@@ -44,6 +45,12 @@ const routes = [
         name : 'BookMan',
         path: '/bookman',
         component: BookManagement,
+
+    },
+    {
+        name : 'MyAccount',
+        path: '/myaccount',
+        component: MyAccount,
 
     },
 ];

@@ -1,6 +1,5 @@
 
         <template>
-
             <v-container fluid>
                 <p>These are the total number of books you have borrowed {{getbookscount}}</p>
                 <v-data-iterator :items="getBooks"  hide-default-footer>

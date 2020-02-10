@@ -123,6 +123,7 @@ class BookUsersController extends Controller
            }
         });
 
-        return response()->json(array($collectionBorrowed,$collectionReserved));
+
+       return response()->json(array($collectionBorrowed,$collectionReserved));
     }
 }
