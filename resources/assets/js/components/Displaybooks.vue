@@ -1,7 +1,6 @@
 
         <template>
             <v-container fluid>
-                <p>{{booksCount}}</p>
                 <v-data-iterator :items="getBooks"  hide-default-footer>
                     <template v-slot:header>
                         <v-toolbar class="mb-2" color="indigo darken-5" dark flat>

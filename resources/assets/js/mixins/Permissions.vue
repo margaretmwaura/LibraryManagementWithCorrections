@@ -3,9 +3,7 @@
     export default {
         methods: {
             $canedit(permissionName,status) {
-                console.log("The permisions granted are in mixins " , window.perm);
-                console.log("This is the status of the book " , status);
-                console.log("Thses is the permission we have been given " , permissionName);
+
                 let permstat =  window.perm.indexOf(permissionName) !== -1;
                 console.log("This is the status of the availability of the permission " , permstat);
 
@@ -16,11 +14,9 @@
                 }
             },
             $candelete(permissionName,status) {
-                console.log("The permisions granted are in mixins " , window.perm);
-                console.log("This is the status of the book " , status);
-                console.log("Thses is the permission we have been given " , permissionName);
+
                 let permstat =  window.perm.indexOf(permissionName) !== -1;
-                console.log("This is the status of the availability of the permission " , permstat)
+                console.log("This is the status of the availability of the permission " , permstat);
 
                 if(permstat === true && status === 9)
                 {
@@ -29,28 +25,24 @@
                 }
             },
             $canborrow(permissionName,status) {
-                console.log("The permisions granted are in mixins " , window.perm);
-                console.log("This is the status of the book " , status);
-                console.log("Thses is the permission we have been given " , permissionName);
+
                 let permstat =  window.perm.indexOf(permissionName) !== -1;
-                console.log("This is the status of the availability of the permission " , permstat)
+                console.log("This is the status of the availability of the permission " , permstat);
 
                 if(permstat === true && status === 9)
                 {
-                    console.log("borrow permission is present");
+                    console.log("borrow permission is present and the book status is " + status);
                     return true
                 }
             },
             $canreserve(permissionName,status) {
-                console.log("The permisions granted are in mixins " , window.perm);
-                console.log("This is the status of the book " , status);
-                console.log("Thses is the permission we have been given " , permissionName);
+
                 let permstat =  window.perm.indexOf(permissionName) !== -1;
-                console.log("This is the status of the availability of the permission " , permstat)
+                console.log("This is the status of the availability of the permission " , permstat);
 
                 if(permstat === true && status === 10)
                 {
-                    console.log("reserve permission is present");
+                    console.log("reserve permission is present and the book status is " + status);
                     return true
                 }
             },

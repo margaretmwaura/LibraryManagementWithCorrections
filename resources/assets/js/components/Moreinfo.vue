@@ -157,9 +157,11 @@
                 let $userBooks = this.getbookscount[0];
                 console.log($userBooks);
                 if($userBooks.some(book => book.name === this.book.name)){
-                    console.log("Book was found in the array")
+                    console.log("Book was found in the array");
+                    return false;
                 } else{
-                    console.log("No book was found in the array")
+                    console.log("No book was found in the array");
+                    return true;
                 }
             }
 
