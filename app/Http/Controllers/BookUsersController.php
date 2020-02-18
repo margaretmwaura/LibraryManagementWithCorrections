@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\collectbook;
 use App\Models\Book;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
+use App\Models\Status;
 
 class BookUsersController extends Controller
 {
@@ -19,40 +17,34 @@ class BookUsersController extends Controller
 
     public function orderBook(Request $request)
     {
-        $statuss=\App\Models\Status::where('name','NOTAVAILABLE')->get();
-        $status=$statuss[0];
-        $statusid=$status->id;
 
+        $status_id=Status::GetBookReservableId();
+
+        Log::info("This is the book not available id " . $status_id);
         $id=$request->input("id");
         $user_id=Auth::user()->id;
-        $email=Auth::user()->email;
 
         $current=Carbon::now();
         $trialExpires=$current->addDays(14);
 
         $book=Book::find($id);
-        $name=$book->name;
 
-        $book->status_id=$statusid;
+        $book->status_id=$status_id;
         $book->save();
         $book->users()->attach($user_id,['due_date'=>$trialExpires,'order_date'=>Carbon::now()]);
 
         $books=app('App\Http\Controllers\BooksController')->index();
         return response()->json($books);
     }
-    public function reservebook(Request $request)
+    public function reserveBook(Request $request)
     {
-        $statuss=\App\Models\Status::where('name','NOTRESERVABLE')->get();
-        $status=$statuss[0];
-        $statusid = $status->id;
+
+        $status_id = Status::GetBookNotAvailableId();
 
         $id=$request->input("id");
         $user_id=Auth::user()->id;
-        $email=Auth::user()->email;
-
         $book=Book::find($id);
-        $name=$book->name;
-        $book->status_id=$statusid;
+        $book->status_id=$status_id;
         $book->save();
         $book->users()->attach($user_id,['borrow_date' => Carbon::now()]);
 
@@ -61,10 +53,10 @@ class BookUsersController extends Controller
     }
     public function getAllBooks()
     {
-        $bookcollection=Book::has('users')->get();
-        return response()->json($bookcollection);
+        $book_collection=Book::has('users')->get();
+        return response()->json($book_collection);
     }
-    public function sendingemails()
+    public function sending_emails()
     {
       $data = Book::with('users')->whereNotNull("due_date")->get();
         try{
@@ -81,7 +73,7 @@ class BookUsersController extends Controller
             Log::info("The reasons for not getting the collection " . $e->getMessage());
         }
     }
-    public function returnbook(Request $request)
+    public function return_book(Request $request)
     {
         $email = $request->input('email');
         $book = Book::find($request->input('book.id'));

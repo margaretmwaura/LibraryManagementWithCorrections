@@ -33,7 +33,7 @@ Route::post('/remove','RolesPermissionController@detachingrolesandpermissions');
 Route::get('/users','UserController@index');
 Route::post('/toggle','RolesPermissionController@toggleUserRole');
 Route::post('/orderbook','BookUsersController@orderBook');
-Route::post('/reservebook','BookUsersController@reservebook');
+Route::post('/reservebook','BookUsersController@reserveBook');
 Route::get('/getallbooks','BookUsersController@getAllBooks');
 Route::post('/returnbook','BookUsersController@returnbook');
 Route::get('/bookscount','BookUsersController@getBooks');

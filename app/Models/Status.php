@@ -16,4 +16,18 @@ class Status extends Model
     {
         return $this->hasMany(Book::class);
     }
+    public function scopeGetBookAvailableId($query)
+    {
+        return $query->where('name','AVAILABLE')->get()->first()->id;
+    }
+
+    public function scopeGetBookReservableId($query)
+    {
+        return $query->where('name','RESERVABLE')->get()->first()->id;
+    }
+
+    public function scopeGetBookNotAvailableId($query)
+    {
+        return $query->where('name','NOTAVAILABLE')->get()->first()->id;
+    }
 }
