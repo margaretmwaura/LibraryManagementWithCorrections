@@ -12,7 +12,7 @@ export default new Vuex.Store({
         rolesnperms:[],
         allUsers:[],
         allorderednreserved:[],
-        bookscount:0,
+        bookscount:" ",
         statases:[],
 
         // The below variables hold the values that show the status of the result
@@ -253,7 +253,6 @@ export default new Vuex.Store({
                     {
 
                         this.state.books = response.data.original;
-                        this.state.bookscount = this.state.bookscount + 1;
                         console.log("This is the response after order " , response.data.original);
                         this.state.ordersuccess = "Successful"
                     }

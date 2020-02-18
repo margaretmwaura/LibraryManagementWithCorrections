@@ -106,7 +106,7 @@ class BookUsersController extends Controller
     }
     public function getBooks()
     {
-        $user=User::find(18);
+        $user=User::find(Auth::user()->id);
         $count=$user->books;
         Log::info("We are trying to get count ".$count);
         $collectionBorrowed = collect([]);

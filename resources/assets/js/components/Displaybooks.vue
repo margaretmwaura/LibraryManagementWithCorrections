@@ -1,7 +1,7 @@
 
         <template>
             <v-container fluid>
-                <p>These are the total number of books you have borrowed {{getbookscount}}</p>
+                <p>{{booksCount}}</p>
                 <v-data-iterator :items="getBooks"  hide-default-footer>
                     <template v-slot:header>
                         <v-toolbar class="mb-2" color="indigo darken-5" dark flat>
@@ -56,17 +56,22 @@
 
     export default {
         name: "displaybooks",
+
         components: {
                 Moreinfo
             },
         computed: {
-            ...mapGetters(['getBooks']),
+            ...mapGetters(['getBooks','getbookscount']),
             numberOfPages () {
                 return Math.ceil(this.getBooks.length / this.itemsPerPage)
             },
             filteredKeys () {
                 return this.keys.filter(key => key !== `Name`)
             },
+            booksCount()
+            {
+               return this.getbookscount;
+            }
         },
         mounted() {
             this.$store.dispatch('getallbooks');

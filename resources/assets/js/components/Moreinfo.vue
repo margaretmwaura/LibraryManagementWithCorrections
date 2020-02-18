@@ -18,14 +18,14 @@
                 <v-card-text>
                     <p>Category :  {{book.category}}</p>
                 </v-card-text>
-<!--                <v-card-text>-->
-<!--                    <div v-if="checkRemainingBooks(getbookscount)">-->
-<!--                        <p> You have borrowed a total of {{getbookscount}} , the remaining borrow count is {{borrowcount(getbookscount)}}</p>-->
-<!--                    </div>-->
-<!--                    <div v-else>-->
-<!--                        <p>You cannot borrow more books you have exceeded 3 books</p>-->
-<!--                    </div>-->
-<!--                </v-card-text>-->
+                <v-card-text>
+                    <div v-if="checkRemainingBooks()">
+                        <p> You have borrowed a total of {{ numberOfBorrowedBooks }} , the remaining borrow count is {{borrowcount}}</p>
+                    </div>
+                    <div v-else>
+                        <p>You cannot borrow more books you have exceeded 3 books</p>
+                    </div>
+                </v-card-text>
                 <v-divider></v-divider>
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -33,12 +33,15 @@
                     <v-spacer></v-spacer>
                     <v-btn v-on:click="editting(book)"  v-if="$canedit('Edit',book.status_id)">Edit </v-btn>
                     <v-spacer></v-spacer>
-<!--                    <div v-if="checkRemainingBooks(getbookscount)">-->
-                    <div>
+
+                    <div v-if="checkRemainingBooks()">
                         <v-btn  v-on:click="orderBook(book)" v-if="$canborrow('Borrow',book.status_id)">Borrow </v-btn>
                         <v-spacer></v-spacer>
                     </div>
-                    <v-btn v-on:click="reserveBook(book)" v-if="$canreserve('Reserve',book.status_id)">Reserve </v-btn>
+                    <div v-if="reservable()">
+                        <v-btn v-on:click="reserveBook(book)" v-if="$canreserve('Reserve',book.status_id)">Reserve </v-btn>
+                    </div>
+
                     <v-spacer></v-spacer>
                     <v-divider></v-divider>
                     <v-btn color="primary" text @click="togglingPermissions">
@@ -51,7 +54,6 @@
 </template>
 <script>
     import {mapGetters} from "vuex";
-
     export default {
         name: "Popup",
         data()
@@ -63,6 +65,16 @@
         },
         computed: {
             ...mapGetters(['getallRolesg','getbookscount']),
+            borrowcount()
+            {
+                let remain = 3 - this.getbookscount[0].length;
+                return remain;
+            },
+            numberOfBorrowedBooks()
+            {
+                return this.getbookscount[0].length;
+            }
+
         },
         props: {
             book: Array,
@@ -122,14 +134,14 @@
                     return false
                 }
             },
-            checkRemainingBooks(count)
+            checkRemainingBooks()
             {
-                if(count < 3)
+                if(this.numberOfBorrowedBooks < 3)
                 {
                     console.log("The condition sis true");
                     return true
                 }
-                if(count >= 3)
+                if(this.numberOfBorrowedBooks >= 3)
                 {
                     console.log("The condition sis true");
                     return false;
@@ -139,14 +151,18 @@
                     console.log("The condition sis false");
                     return false
                 }
-
-
                 },
-            borrowcount(count)
+            reservable()
             {
-                let remain = 3 - count;
-                return remain;
+                let $userBooks = this.getbookscount[0];
+                console.log($userBooks);
+                if($userBooks.some(book => book.name === this.book.name)){
+                    console.log("Book was found in the array")
+                } else{
+                    console.log("No book was found in the array")
+                }
             }
+
         }
     }
 </script>
