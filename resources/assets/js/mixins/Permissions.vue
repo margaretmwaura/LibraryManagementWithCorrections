@@ -2,45 +2,45 @@
     import {mapGetters} from "vuex";
     export default {
         methods: {
-            $canedit(permissionName,status) {
+            $can_edit(permissionName,status) {
 
-                let permstat =  window.perm.indexOf(permissionName) !== -1;
-                console.log("This is the status of the availability of the permission " , permstat);
+                let perm_stat =  window.perm.indexOf(permissionName) !== -1;
+                console.log("This is the status of the availability of the permission " , perm_stat ,"and the book availability is ",status);
 
-                if(permstat === true && status === 9)
+                if(perm_stat && status)
                 {
                     console.log("Edit permission is present");
                     return true
                 }
             },
-            $candelete(permissionName,status) {
+            $can_delete(permissionName,status) {
 
-                let permstat =  window.perm.indexOf(permissionName) !== -1;
-                console.log("This is the status of the availability of the permission " , permstat);
+                let perm_stat =  window.perm.indexOf(permissionName) !== -1;
+                console.log("This is the status of the availability of the permission " , perm_stat,"and the book availability is ",status);
 
-                if(permstat === true && status === 9)
+                if(perm_stat && status)
                 {
                     console.log("delete permission is present");
                     return true
                 }
             },
-            $canborrow(permissionName,status) {
+            $can_borrow(permissionName,status) {
 
-                let permstat =  window.perm.indexOf(permissionName) !== -1;
-                console.log("This is the status of the availability of the permission " , permstat);
+                let perm_stat =  window.perm.indexOf(permissionName) !== -1;
+                console.log("This is the status of the availability of the permission " , perm_stat,"and the book availability is ",status);
 
-                if(permstat === true && status === 9)
+                if(perm_stat && status)
                 {
                     console.log("borrow permission is present and the book status is " + status);
                     return true
                 }
             },
-            $canreserve(permissionName,status) {
+            $can_reserve(permissionName,status) {
 
-                let permstat =  window.perm.indexOf(permissionName) !== -1;
-                console.log("This is the status of the availability of the permission " , permstat);
+                let perm_stat =  window.perm.indexOf(permissionName) !== -1;
+                console.log("This is the status of the availability of the permission " , perm_stat,"and the book availability is ",status);
 
-                if(permstat === true && status === 10)
+                if(perm_stat && status)
                 {
                     console.log("reserve permission is present and the book status is " + status);
                     return true

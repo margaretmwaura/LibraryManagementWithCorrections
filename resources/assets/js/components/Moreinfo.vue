@@ -29,17 +29,17 @@
                 <v-divider></v-divider>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn v-on:click="deleting(book.id)"  v-if="$candelete('Delete',book.status_id)">Delete</v-btn>
+                    <v-btn v-on:click="deleting(book.id)"  v-if="$can_delete('Delete',book.is_available)">Delete</v-btn>
                     <v-spacer></v-spacer>
-                    <v-btn v-on:click="editting(book)"  v-if="$canedit('Edit',book.status_id)">Edit </v-btn>
+                    <v-btn v-on:click="editting(book)"  v-if="$can_edit('Edit',book.is_available)">Edit </v-btn>
                     <v-spacer></v-spacer>
 
                     <div v-if="checkRemainingBooks()">
-                        <v-btn  v-on:click="orderBook(book)" v-if="$canborrow('Borrow',book.status_id)">Borrow </v-btn>
+                        <v-btn  v-on:click="orderBook(book)" v-if="$can_borrow('Borrow',book.is_available)">Borrow </v-btn>
                         <v-spacer></v-spacer>
                     </div>
                     <div v-if="reservable()">
-                        <v-btn v-on:click="reserveBook(book)" v-if="$canreserve('Reserve',book.status_id)">Reserve </v-btn>
+                        <v-btn v-on:click="reserveBook(book)" v-if="$can_reserve('Reserve',book.is_reservable)">Reserve </v-btn>
                     </div>
 
                     <v-spacer></v-spacer>

@@ -38,9 +38,7 @@ class BookUsersController extends Controller
     }
     public function reserveBook(Request $request)
     {
-
         $status_id = Status::GetBookNotAvailableId();
-
         $id=$request->input("id");
         $user_id=Auth::user()->id;
         $book=Book::find($id);
@@ -77,7 +75,7 @@ class BookUsersController extends Controller
     {
         $email = $request->input('email');
         $book = Book::find($request->input('book.id'));
-        $users = User::where('email',$email)->get();
+        $users = User::where('email',$email)->get()->first()->id;
         $id = $users[0]->id;
         $users = $request->input('book.users');
         try{
@@ -106,11 +104,9 @@ class BookUsersController extends Controller
         $count->each(function ($item, $key) use ($collectionBorrowed,$collectionReserved){
            if($item->pivot->due_date)
            {
-               Log::info("This was a borrowed book push it to borrowed books");
                $collectionBorrowed->push($item);
            }
            else{
-               Log::info("This was a reserved book push it to reserved books");
                $collectionReserved->push($item);
            }
         });
