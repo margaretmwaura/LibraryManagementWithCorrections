@@ -33,8 +33,7 @@ class BookUsersController extends Controller
         $book->save();
         $book->users()->attach($user_id,['due_date'=>$trialExpires,'order_date'=>Carbon::now()]);
 
-        $books=app('App\Http\Controllers\BooksController')->index();
-        return response()->json($books);
+        return response("Success",200);
     }
     public function reserveBook(Request $request)
     {
@@ -46,8 +45,7 @@ class BookUsersController extends Controller
         $book->save();
         $book->users()->attach($user_id,['borrow_date' => Carbon::now()]);
 
-        $books=app('App\Http\Controllers\BooksController')->index();
-        return response()->json($books);
+        return response("Success",200);
     }
     public function getAllBooks()
     {
@@ -75,9 +73,11 @@ class BookUsersController extends Controller
     {
         $email = $request->input('email');
         $book = Book::find($request->input('book.id'));
-        $users = User::where('email',$email)->get()->first()->id;
-        $id = $users[0]->id;
+        $id = User::where('email',$email)->get()->first()->id;
         $users = $request->input('book.users');
+        Log::info($users);
+        Log::info($id);
+        dd($users);
         try{
             foreach ($users as $user)
             {
@@ -86,6 +86,8 @@ class BookUsersController extends Controller
                if($due !== null)
                {
                    $book->users()->wherePivot('due_date', $due)->updateExistingPivot($id, array('return_date'=>Carbon::now()), false);
+                   $book->status_id=Status::GetBookAvailableId();
+                   $book->save();
                }
             }
         }

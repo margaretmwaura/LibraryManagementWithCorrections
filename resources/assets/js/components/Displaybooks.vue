@@ -5,6 +5,7 @@
                     <template v-slot:header>
                         <v-toolbar class="mb-2" color="indigo darken-5" dark flat>
                             <v-toolbar-title>Below are all the books listed in the cytonn library</v-toolbar-title>
+
                         </v-toolbar>
                     </template>
 
@@ -98,38 +99,6 @@
                 sortDesc: false,
                 page: 1,
                 itemsPerPage: 3,
-            }
-        },
-        watch: {
-            '$store.state.ordersuccess' : function () {
-                console.log("The ordering was a success");
-                this.informwithnotification("Success" , "You have borrowed a book");
-                this.$store.dispatch('clearOrderSuccess');
-            },
-            '$store.state.orderfail' : function () {
-                console.log("The ordering was failed");
-                this.informwithnotification("Fail" , "You have not managed to borrow a book");
-                this.$store.dispatch('clearOrderFail');
-            },
-            '$store.state.reservesuccess' : function () {
-                console.log("The ordering was a success");
-                this.informwithnotification("Success" , "You have reserved a book");
-                this.$store.dispatch('clearReserveSuccess');
-            },
-            '$store.state.reservefail' : function () {
-                console.log("The ordering was failed");
-                this.informwithnotification("Fail" , "You have not managed to reserve a book");
-                this.$store.dispatch('clearReserveFail');
-            },
-            '$store.state.deletesuccess' : function () {
-                console.log("The ordering was a success");
-                this.informwithnotification("Success" , "You have delete a book");
-                this.$store.dispatch('clearDeleteSuccess');
-            },
-            '$store.state.deletefail' : function () {
-                console.log("The ordering was failed");
-                this.informwithnotification("Fail" , "You have not managed to deleted a book");
-                this.$store.dispatch('clearDeleteFail');
             }
         },
         mixins: [notificationmixin],

@@ -20,7 +20,7 @@
                 </v-card-text>
                 <v-card-text>
                     <div v-if="checkRemainingBooks()">
-                        <p> You have borrowed a total of {{ numberOfBorrowedBooks }} , the remaining borrow count is {{borrowcount}}</p>
+                        <p> You have borrowed a total of {{ numberOfBorrowedBooks }} , the remaining borrow count is {{borrow_count}}</p>
                     </div>
                     <div v-else>
                         <p>You cannot borrow more books you have exceeded 3 books</p>
@@ -31,7 +31,7 @@
                     <v-spacer></v-spacer>
                     <v-btn v-on:click="deleting(book.id)"  v-if="$can_delete('Delete',book.is_available)">Delete</v-btn>
                     <v-spacer></v-spacer>
-                    <v-btn v-on:click="editting(book)"  v-if="$can_edit('Edit',book.is_available)">Edit </v-btn>
+                    <v-btn v-on:click="editing(book)"  v-if="$can_edit('Edit',book.is_available)">Edit </v-btn>
                     <v-spacer></v-spacer>
 
                     <div v-if="checkRemainingBooks()">
@@ -54,6 +54,7 @@
 </template>
 <script>
     import {mapGetters} from "vuex";
+    import axios from "axios";
     export default {
         name: "Popup",
         data()
@@ -65,7 +66,7 @@
         },
         computed: {
             ...mapGetters(['getallRolesg','getbookscount']),
-            borrowcount()
+            borrow_count()
             {
                 let remain = 3 - this.getbookscount[0].length;
                 return remain;
@@ -90,7 +91,7 @@
                 this.$store.dispatch('deleteABook',id);
                 this.dialog = false;
             },
-            editting(book)
+            editing(book)
             {
                 console.log("We want to edit the blog");
                 this.$router.push({
@@ -103,14 +104,44 @@
             },
             orderBook(book)
             {
-                this.$store.dispatch('orderBook',book);
+                axios
+                    .post('/order_book',book)
+                    .then(response => {
+                        let code = response.status;
+                        if(code === 200)
+                        {
+                            //Updating the records of the books and users
+                            this.$store.dispatch('getallbooks');
+                            this.$store.dispatch('getallusersbooks');
+                        }
+                    })
+                    .catch(error =>
+                    {
+
+                    });
                 this.dialog = false;
             },
             reserveBook(book)
             {
-                console.log("A book has been reserved");
-                this.$store.dispatch('reserveBook',book);
-                this.dialog = false;
+                axios
+                    .post('/reserve_book',book)
+                    .then(response => {
+                        var code = response.status;
+                        if(code === 200)
+                        {
+                            //Updating the records of the books and users
+                            this.$store.dispatch('getallbooks');
+                            this.$store.dispatch('getallusersbooks');
+                        }
+                        else
+                        {
+
+                        }
+                    })
+                    .catch(error =>
+                    {
+
+                    })
             },
             show_reserve(id)
             {

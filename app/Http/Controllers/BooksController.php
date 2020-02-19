@@ -27,7 +27,6 @@ class BooksController extends Controller
     {
         $books=$this->bookRepository->all();
 
-        dd($books);
         return response()->json($books);
     }
     public function update(Request $request)
