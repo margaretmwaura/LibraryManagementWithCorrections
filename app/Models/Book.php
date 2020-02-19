@@ -19,6 +19,10 @@ class Book extends Model
         return $this->belongsToMany(User::class)->withPivot('due_date', 'borrow_date','order_date','return_date')->withTimestamps();
     }
 
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
     public function getIsAvailableAttribute()
     {
         $is_available = $this->status->id;

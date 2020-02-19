@@ -5,7 +5,9 @@
                 <p>Add a Book</p>
                 <v-form v-model="valid" ref="form">
                     <v-text-field label="Book Name" v-model="form.name" :rules="nameRules" :counter="30"  color="purple darken-2" > </v-text-field>
-                    <v-text-field label="Book category" v-model="form.category" :rules="categoryRules" :counter="20"  color="purple darken-2" > </v-text-field>
+                    <v-autocomplete v-model="form.category" :items="getCategories"  label="Category"
+                                    required>
+                    </v-autocomplete>
                     <v-text-field label="Release year" v-model="form.year" :rules="yearRules" :counter="4"  color="purple darken-2" > </v-text-field>
                     <v-text-field label="Book author" v-model="form.author" :rules="authorRules" :counter="20"  color="purple darken-2" > </v-text-field>
                     <v-textarea label="Book description" v-model="form.description" :rules="urlRules" :counter="200"  color="purple darken-2" > </v-textarea>
@@ -95,7 +97,7 @@
             }
         },
         computed: {
-            ...mapGetters(['getAllOrderedReserved']),
+            ...mapGetters(['getAllOrderedReserved','getCategories']),
             selectErrors () {
                 const errors = [];
                 if (!this.$v.select.$dirty) return errors;
@@ -185,6 +187,7 @@
 
         mounted() {
             this.$store.dispatch('getAllOrderedAndReservedBooks');
+            this.$store.dispatch('getCategories');
         },
 
         watch: {

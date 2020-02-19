@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Repository\Interfaces\BookRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -18,9 +19,10 @@ class BooksController extends Controller
     }
     public function store(Request $request)
     {
-
+        $category=$request->input("category");
+        $id= Category::whereName($category)->first()->id;
         Log::info("This is the request " . $request);
-        $this->bookRepository->storeRecord($request->all());
+        $this->bookRepository->storeRecord($request->all(),$id);
        return response("Success",200);
     }
     public function index()

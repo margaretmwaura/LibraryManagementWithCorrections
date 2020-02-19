@@ -13,6 +13,7 @@ export default new Vuex.Store({
         allUsers:[],
         allOrderedReserved:[],
         aUsersBooks:" ",
+        categories:[]
         
     },
     mutations: {
@@ -244,9 +245,22 @@ export default new Vuex.Store({
             axios
                 .get('/users_books')
                 .then(response => {
-                    console.log("This is the response " + response);
-                    this.state.aUsersBooks = response.data;
-
+                    this.state.categories = response.data;
+                })
+                .catch(error =>
+                {
+                })
+        },
+        getCategoriesMut()
+        {
+            axios
+                .get('/categories')
+                .then(response => {
+                    const code = response.status;
+                    if(code === 200)
+                    {
+                        this.state.categories = response.data;
+                    }
                 })
                 .catch(error =>
                 {
@@ -278,6 +292,9 @@ export default new Vuex.Store({
             },
             getAUsersBooks:state=>{
                 return state.aUsersBooks
+            },
+            getCategories:state=>{
+                return state.categories
             }
         },
     actions:
@@ -368,6 +385,10 @@ export default new Vuex.Store({
             {
                 state.commit("getAllOrderedAndReservedBooksMut")
             },
+            getCategories(state)
+            {
+                state.commit("getCategoriesMut")
+            }
 
         },
 

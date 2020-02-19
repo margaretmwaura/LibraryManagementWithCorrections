@@ -65,7 +65,7 @@
             }
         },
         computed: {
-            ...mapGetters(['getAUsersBooks']),
+            ...mapGetters(['getAUsersBooks','getBooks']),
             borrow_count()
             {
                 let remain = 3 - this.getAUsersBooks[0].length;
@@ -202,14 +202,25 @@
             reservable()
             {
                 let $userBooks = this.getAUsersBooks[0];
-                console.log($userBooks);
-                if($userBooks.some(book => book.name === this.book.name)){
-                    console.log("Book was found in the array");
-                    return false;
-                } else{
-                    console.log("No book was found in the array");
-                    return true;
+                // if($userBooks.some(book => book.name === this.book.name)){
+                //     console.log("Book was found in the array");
+                //     return false;
+                // } else{
+                //     console.log("No book was found in the array");
+                //     return true;
+                // }
+
+                for(let i = 0; i <=$userBooks.length; i++){
+
+                    if($userBooks[i].name === this.book.name)
+                    {
+                        return false
+                    }
+                    else {
+                        return true;
+                    }
                 }
+
             }
 
         },

@@ -16,9 +16,16 @@ class BookRepository implements BookRepositoryInterface
        return Book::all();
     }
 
-    public function storeRecord($input)
+    public function storeRecord($input,$id)
     {
-        Book::create($input);
+       $book = new Book();
+       $book->name = $input['name'];
+       $book->category_id=$id;
+       $book->year=$input['year'];
+       $book->author=$input['author'];
+       $book->description=$input['description'];
+       $book->save();
+
     }
 
     public function deleteRecord($id)
