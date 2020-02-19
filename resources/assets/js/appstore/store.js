@@ -169,48 +169,6 @@ export default new Vuex.Store({
                 {
                 })
         },
-        deleteABookMut(state,id)
-        {
-            axios
-                .delete('/books/' + id,{
-                })
-                .then(response => {
-                    const code = response.status;
-                    if(code === 200)
-                    {
-                        this.state.books = response.data;
-                         this.state.deletesuccess = "Sucess"
-                    }
-                    else
-                    {
-                        this.state.deletefail = "Failed"
-                    }
-                })
-                .catch(error =>
-                {
-                    this.state.deletefail = "Failed"
-                })
-        },
-        editABookMut(state,data)
-        {
-            axios
-                .post('/booksedit',data)
-                .then(response => {
-                    const code = response.status;
-                    if(code === 200)
-                    {
-
-                    }
-                    else
-                    {
-
-                    }
-                })
-                .catch(error =>
-                {
-
-                })
-        },
         toggleRolesMut(state , user)
         {
             console.log(user);

@@ -106,14 +106,21 @@
         },
         methods: {
             create() {
-                if(this.valid)
-                {
-                    this.$store.dispatch('addbook',this.form);
-                }
-                else
-                {
-                    this.informwithnotification("Fail" , "Ensure you fill all details");
-                }
+                axios
+                    .post('/books',this.form)
+                    .then(response => {
+                        let code = response.status;
+                        if(code === 200)
+                        {
+                            this.informwithnotification("Status" , "Successful , you have successfully added a book");
+                            this.$store.dispatch('getAllBooks');
+                        }
+
+                    })
+                    .catch(error =>
+                    {
+
+                    })
 
             },
             return_book(book,email)

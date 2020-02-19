@@ -20,22 +20,22 @@ class BooksController extends Controller
     {
 
         Log::info("This is the request " . $request);
-       $books=$this->bookRepository->storeRecord($request->all());
-        return response()->json($books);
+        $this->bookRepository->storeRecord($request->all());
+       return response("Success",200);
     }
     public function index()
     {
         $books=$this->bookRepository->all();
-
         return response()->json($books);
     }
     public function update(Request $request)
     {
         $this->bookRepository->updateRecord($request);
+        return response("Success",200);
     }
     public function destroy($id)
     {
-        $books=$this->bookRepository->deleteRecord($id);
-        return response()->json($books);
+       $this->bookRepository->deleteRecord($id);
+        return response("Success",200);
     }
 }

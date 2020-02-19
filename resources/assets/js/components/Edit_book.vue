@@ -22,6 +22,7 @@
     import {validationMixin} from "vuelidate";
     import notificationmixin from "../mixins/notificationmixin";
     import {required} from "vuelidate/lib/validators";
+    import axios from "axios";
 
     export default {
         name: "Edit_book",
@@ -60,8 +61,25 @@
             edit() {
                 if(this.valid)
                 {
-                    this.$store.dispatch('editABook',this.form);
-                    this.informwithnotification("Status" , "The record is being updated go back to display to confirm status");
+                    axios
+                        .post('/books_edit',this.form)
+                        .then(response => {
+                            const code = response.status;
+                            if(code === 200)
+                            {
+                                this.informwithnotification("Status" , "Successful , you have successfully ");
+                                this.$store.dispatch('getAllBooks');
+                            }
+                            else
+                            {
+
+                            }
+                        })
+                        .catch(error =>
+                        {
+
+                        })
+
                 }
                 else
                 {

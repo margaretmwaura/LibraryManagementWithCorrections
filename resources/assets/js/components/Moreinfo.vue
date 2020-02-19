@@ -87,8 +87,24 @@
             },
             deleting(id)
             {
-                console.log("Id of the deleting " + id);
-                this.$store.dispatch('deleteABook',id);
+                axios
+                    .delete('/books/' + id,{
+                    })
+                    .then(response => {
+                        const code = response.status;
+                        if(code === 200)
+                        {
+                            this.informwithnotification("Deleting" , "You have deleted a book");
+                        }
+                        else
+                        {
+
+                        }
+                    })
+                    .catch(error =>
+                    {
+
+                    })
                 this.dialog = false;
             },
             editing(book)

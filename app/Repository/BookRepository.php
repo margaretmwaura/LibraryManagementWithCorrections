@@ -19,8 +19,6 @@ class BookRepository implements BookRepositoryInterface
     public function storeRecord($input)
     {
         Book::create($input);
-        return Book::all();
-
     }
 
     public function deleteRecord($id)
@@ -28,7 +26,6 @@ class BookRepository implements BookRepositoryInterface
         $book = Book::find($id);
         Log::info("Data to be deleted " . $id);
         $book->delete();
-        return Book::all();
     }
 
     public function updateRecord(Request $request)
