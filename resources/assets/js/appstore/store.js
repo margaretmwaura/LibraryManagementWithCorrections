@@ -12,7 +12,7 @@ export default new Vuex.Store({
         rolesPerms:[],
         allUsers:[],
         allOrderedReserved:[],
-        booksCount:" ",
+        aUsersBooks:" ",
         
     },
     mutations: {
@@ -211,7 +211,6 @@ export default new Vuex.Store({
 
                 })
         },
-
         toggleRolesMut(state , user)
         {
             console.log(user);
@@ -254,7 +253,7 @@ export default new Vuex.Store({
         },
         getAllOrderedAndReservedBooksMut()
         {
-            axios.get('/getAllBooks')
+            axios.get('/get_all_books')
                 .then(response => {
                     this.state.allOrderedReserved = response.data;
                 })
@@ -282,19 +281,19 @@ export default new Vuex.Store({
                 {
                 })
         },
-        getAllUsersBooksMut()
+        getAUsersBooksMut()
         {
             axios
-                .get('/allOrderedReserved')
+                .get('/users_books')
                 .then(response => {
-                        console.log("This is the response " + response);
-                        this.state.allOrderedReserved = response.data;
+                    console.log("This is the response " + response);
+                    this.state.aUsersBooks = response.data;
 
                 })
                 .catch(error =>
                 {
                 })
-        },
+        }
         },
     getters:
         {
@@ -319,6 +318,9 @@ export default new Vuex.Store({
             getRolesPerms:state => {
                 return state.rolesPerms
             },
+            getAUsersBooks:state=>{
+                return state.aUsersBooks
+            }
         },
     actions:
         {
@@ -399,6 +401,14 @@ export default new Vuex.Store({
             editABook(state,data)
             {
                 state.commit("editABookMut",data)
+            },
+            getAUsersBooks(state)
+            {
+                state.commit("getAUsersBooksMut")
+            },
+            getAllOrderedAndReservedBooks(state)
+            {
+                state.commit("getAllOrderedAndReservedBooksMut")
             },
 
         },

@@ -14,7 +14,7 @@
             </v-flex>
         </v-layout>
 
-        <v-card class="pa-5" v-for="books in getallorderednreserved" :key="books.id">
+        <v-card class="pa-5" v-for="books in getAllOrderedReserved" :key="books.id">
             <v-layout row>
                 <v-flex xs12 md12 >
                     <div class="cption grey--text">Book Name</div>
@@ -95,7 +95,7 @@
             }
         },
         computed: {
-            ...mapGetters(['getallPermissions','getallRolesg','getallpermsroles','getallUsersg','getallorderednreserved']),
+            ...mapGetters(['getAllOrderedReserved']),
             selectErrors () {
                 const errors = [];
                 if (!this.$v.select.$dirty) return errors;
@@ -126,7 +126,7 @@
                         let code = response.status;
                         if(code === 200)
                         {
-                            this.$store.dispatch('getallorderedandreservedbooks');
+                            this.$store.dispatch('getAllOrderedAndReservedBooks');
                         }
                     })
                     .catch(error =>
@@ -177,7 +177,7 @@
         },
 
         mounted() {
-            this.$store.dispatch('getallorderedandreservedbooks');
+            this.$store.dispatch('getAllOrderedAndReservedBooks');
         },
 
         watch: {

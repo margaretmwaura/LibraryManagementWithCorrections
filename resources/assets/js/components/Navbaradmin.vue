@@ -18,23 +18,23 @@
         <v-navigation-drawer temporary app class="indigo" v-model="drawer" >
 
             <v-list>
-                    <v-list-item router to="/rolesnperm">
+                    <v-list-item router to="/roles_perm">
                         <v-list-item-icon>
                             <v-icon class="white--text">mdi-account-arrow-right</v-icon>
                         </v-list-item-icon>
                         <v-list-item-content>
                             <v-list-item-title class="white--text">
-                                <p id="titleo">R/P management</p></v-list-item-title>
+                                <p id="title_o">R/P management</p></v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
 
-                    <v-list-item router to="/bookman">
+                    <v-list-item router to="/book_man">
                         <v-list-item-icon>
                             <v-icon class="white--text">mdi-book-open-page-variant</v-icon>
                         </v-list-item-icon>
                         <v-list-item-content>
                             <v-list-item-title class="white--text">
-                                <p id="titlet">B/Management</p></v-list-item-title>
+                                <p id="title_t">B/Management</p></v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
 
@@ -44,17 +44,17 @@
                     </v-list-item-icon>
                     <v-list-item-content>
                         <v-list-item-title class="white--text">
-                            <p id="titleh">Display</p></v-list-item-title>
+                            <p id="title_h">Display</p></v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
 
-                <v-list-item router to="/myaccount">
+                <v-list-item router to="/my_account">
                     <v-list-item-icon>
                         <v-icon class="white--text">mdi-view-dashboard</v-icon>
                     </v-list-item-icon>
                     <v-list-item-content>
                         <v-list-item-title class="white--text">
-                            <p id="titlea">My Account</p></v-list-item-title>
+                            <p id="title_a">My Account</p></v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
             </v-list>
@@ -86,22 +86,22 @@
         color:black;
     }
 
-    #titleo
+    #title_o
     {
         font-size:16px;
         color:white;
     }
-    #titlet
+    #title_t
     {
         font-size:16px;
         color:white;
     }
-    #titleh
+    #title_h
     {
         font-size:16px;
         color:white;
     }
-    #titlea
+    #title_a
     {
         font-size:16px;
         color:white;

@@ -1,6 +1,6 @@
 import Add_book from "../components/Add_book";
 import Edit_book from "../components/Edit_book";
-import Displaybooks from "../components/Displaybooks";
+import Display_books from "../components/Displaybooks";
 import Dashboard from "../components/Dashboard";
 import Vue from "vue";
 import VueRouter from "vue-router";
@@ -20,7 +20,7 @@ const routes = [
     {
         name : 'Display',
         path: '/',
-        component: Displaybooks,
+        component: Display_books,
 
     },
     {
@@ -36,20 +36,20 @@ const routes = [
 
     },
     {
-        name : 'RolesnPerm',
-        path: '/rolesnperm',
+        name : 'Roles_Perm',
+        path: '/roles_perm',
         component: RolesAndPermissions,
 
     },
     {
         name : 'BookMan',
-        path: '/bookman',
+        path: '/book_man',
         component: BookManagement,
 
     },
     {
         name : 'MyAccount',
-        path: '/myaccount',
+        path: '/my_account',
         component: MyAccount,
 
     },

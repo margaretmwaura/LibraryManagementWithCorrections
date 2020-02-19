@@ -56,7 +56,7 @@
     import {mapGetters} from "vuex";
     import axios from "axios";
     export default {
-        name: "Popup",
+        name: "MoreInfo",
         data()
         {
             return{
@@ -65,15 +65,15 @@
             }
         },
         computed: {
-            ...mapGetters(['getallRolesg','getbookscount']),
+            ...mapGetters(['getAUsersBooks']),
             borrow_count()
             {
-                let remain = 3 - this.getbookscount[0].length;
+                let remain = 3 - this.getAUsersBooks[0].length;
                 return remain;
             },
             numberOfBorrowedBooks()
             {
-                return this.getbookscount[0].length;
+                return this.getAUsersBooks[0].length;
             }
 
         },
@@ -111,8 +111,8 @@
                         if(code === 200)
                         {
                             //Updating the records of the books and users
-                            this.$store.dispatch('getallbooks');
-                            this.$store.dispatch('getallusersbooks');
+                            this.$store.dispatch('getAllBooks');
+                            this.$store.dispatch('getAUsersBooks');
                         }
                     })
                     .catch(error =>
@@ -130,8 +130,8 @@
                         if(code === 200)
                         {
                             //Updating the records of the books and users
-                            this.$store.dispatch('getallbooks');
-                            this.$store.dispatch('getallusersbooks');
+                            this.$store.dispatch('getAllBooks');
+                            this.$store.dispatch('getAUsersBooks');
                         }
                         else
                         {
@@ -185,7 +185,7 @@
                 },
             reservable()
             {
-                let $userBooks = this.getbookscount[0];
+                let $userBooks = this.getAUsersBooks[0];
                 console.log($userBooks);
                 if($userBooks.some(book => book.name === this.book.name)){
                     console.log("Book was found in the array");
@@ -196,7 +196,10 @@
                 }
             }
 
-        }
+        },
+        mounted() {
+            this.$store.dispatch('getAUsersBooks');
+        },
     }
 </script>
 

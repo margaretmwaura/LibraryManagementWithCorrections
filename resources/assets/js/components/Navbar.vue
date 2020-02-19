@@ -24,7 +24,7 @@
                     </v-list-item-icon>
                     <v-list-item-content>
                         <v-list-item-title class="white--text">
-                            <p id="titleh">Display</p></v-list-item-title>
+                            <p id="title_h">Display</p></v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
             </v-list>
@@ -56,17 +56,17 @@
         color:black;
     }
 
-    #titleo
+    #title_o
     {
         font-size:16px;
         color:white;
     }
-    #titlet
+    #title_t
     {
         font-size:16px;
         color:white;
     }
-    #titleh
+    #title_h
     {
         font-size:16px;
         color:white;

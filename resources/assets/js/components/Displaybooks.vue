@@ -36,7 +36,7 @@
                                             <v-list-item-content class="align-end">{{ item.author }}</v-list-item-content>
                                         </v-list-item>
                                         <v-list-item>
-                                            <Moreinfo :book="item"></Moreinfo>
+                                            <MoreInfo :book="item"></MoreInfo>
                                         </v-list-item>
 
                                     </v-list>
@@ -51,31 +51,27 @@
 
 <script>
     import {mapGetters} from "vuex";
-    import Moreinfo from "./Moreinfo";
-    import notificationmixin from "../mixins/notificationmixin";
+    import MoreInfo from "./Moreinfo.vue";
+    import NotificationMixin from "../mixins/notificationmixin";
 
     export default {
-        name: "displaybooks",
+        name: "display_books",
 
         components: {
-                Moreinfo
+                MoreInfo
             },
         computed: {
-            ...mapGetters(['getBooks','getbookscount']),
+            ...mapGetters(['getBooks']),
             numberOfPages () {
                 return Math.ceil(this.getBooks.length / this.itemsPerPage)
             },
             filteredKeys () {
                 return this.keys.filter(key => key !== `Name`)
             },
-            booksCount()
-            {
-               return this.getbookscount;
-            }
         },
         mounted() {
-            this.$store.dispatch('getallbooks');
-            this.$store.dispatch('getallusersbooks');
+            this.$store.dispatch('getAllBooks');
+            this.$store.dispatch('getAUsersBooks');
 
         },
         methods:{
@@ -101,7 +97,7 @@
                 itemsPerPage: 3,
             }
         },
-        mixins: [notificationmixin],
+        mixins: [NotificationMixin],
     }
 </script>
 
