@@ -8,33 +8,19 @@ export default new Vuex.Store({
         books:[],
         permissions:[],
         roles:[],
-        permsroles:[],
-        rolesnperms:[],
+        permsRoles:[],
+        rolesPerms:[],
         allUsers:[],
-        allorderednreserved:[],
-        bookscount:" ",
-        statases:[],
-
-        // The below variables hold the values that show the status of the result
-        ordersuccess:'',
-        orderfail:'',
-        reservesuccess:'',
-        reservefail:'',
-        deletesuccess:'',
-        deletefail:'',
-        addfail:'',
-        addsuccess:'',
-        addrolesuccess:'',
-        addrolefail:'',
-        addpermfail:'',
-        addpermsuccess:''
+        allOrderedReserved:[],
+        booksCount:" ",
+        
     },
     mutations: {
-        setPermissionmut(permission)
+        setPermissionMut(permission)
         {
             this.state.permissions = permission
         },
-        addbookmut(state,data)
+        addBookMut(state,data)
         {
             console.log(data);
             axios
@@ -53,7 +39,7 @@ export default new Vuex.Store({
                     this.state.addfail="Fail"
                 })
         },
-        addPermissionmut(state,data)
+        addPermissionMut(state,data)
         {
             console.log(data);
             axios
@@ -75,7 +61,7 @@ export default new Vuex.Store({
                     this.state.addpermfail = "fail"
                 })
         },
-        addRolemut(state,data)
+        addRoleMut(state,data)
         {
             console.log(data);
             axios
@@ -98,7 +84,7 @@ export default new Vuex.Store({
                     this.state.addrolesuccess = "Success"
                 })
         },
-        getallbooksmut()
+        getAllBooksMut()
         {
             axios.get('/books')
                 .then(response => {
@@ -109,7 +95,7 @@ export default new Vuex.Store({
                 {
                 })
         },
-        getallPermissionsmut()
+        getAllPermissionsMut()
         {
             axios.get('/permissions')
                 .then(response => {
@@ -120,7 +106,7 @@ export default new Vuex.Store({
                 {
                 })
         },
-        getallRolesmut()
+        getAllRolesMut()
         {
             axios.get('/roles')
                 .then(response => {
@@ -131,28 +117,28 @@ export default new Vuex.Store({
                 {
                 })
         },
-        getallRolesPermissionsmut()
+        getAllRolesPermissionsMut()
         {
             axios.get('/allperms')
                 .then(response => {
-                    this.state.permsroles = response.data;
+                    this.state.permsRoles = response.data;
                     console.log("This is the data I have gotten in regards to roles " + this.books)
                 })
                 .catch(error =>
                 {
                 })
         },
-        getrolesnpermsmut()
+        getRolesPermsMut()
         {
             axios.get('/rolenperms')
                 .then(response => {
-                    this.state.rolesnperms = response.data;
+                    this.state.rolesPerms = response.data;
                 })
                 .catch(error =>
                 {
                 })
         },
-        getAllUsersmut()
+        getAllUsersMut()
         {
             axios.get('/users')
                 .then(response => {
@@ -163,21 +149,21 @@ export default new Vuex.Store({
                 {
                 })
         },
-        assignPermissionToRolemut(state,data)
+        assignPermissionToRoleMut(state,data)
         {
             axios.post('/assign',data)
                 .then(response => {
-                    this.state.rolesnperms = response.data;
+                    this.state.rolesPerms = response.data;
                 })
                 .catch(error =>
                 {
                 })
         },
-        removePermissionToRolemut(state,data)
+        removePermissionToRoleMut(state,data)
         {
             axios.post('/remove',data)
                 .then(response => {
-                    this.state.rolesnperms = response.data;
+                    this.state.rolesPerms = response.data;
                 })
                 .catch(error =>
                 {
@@ -242,7 +228,7 @@ export default new Vuex.Store({
                 {
                 })
         },
-        orderBookmut(state,book)
+        orderBookMut(state,book)
         {
             axios
                 .post('/orderbook',book)
@@ -266,39 +252,17 @@ export default new Vuex.Store({
                     this.state.orderfail = "Fail"
                 })
         },
-        reserveBookmut(state,book)
+        getAllOrderedAndReservedBooksMut()
         {
-            axios
-                .post('/reservebook',book)
+            axios.get('/getAllBooks')
                 .then(response => {
-                    var code = response.status;
-                    if(code === 200)
-                    {
-                        this.state.books = response.data.original;
-                        console.log("This is the response after receive " , response.data.original);
-                       this.state.reservesuccess = "Success"
-                    }
-                    else
-                    {
-                        this.state.reservefail = "Fail"
-                    }
-                })
-                .catch(error =>
-                {
-                    this.state.reservefail = "Fail"
-                })
-        },
-        getallorderedandreservedbooksmut()
-        {
-            axios.get('/getallbooks')
-                .then(response => {
-                    this.state.allorderednreserved = response.data;
+                    this.state.allOrderedReserved = response.data;
                 })
                 .catch(error =>
                 {
                 })
         },
-        loginusermut()
+        loginUserMut()
         {
             axios.get('/login')
                 .then(response => {
@@ -308,7 +272,7 @@ export default new Vuex.Store({
                 {
                 })
         },
-        registerusermut()
+        registerUserMut()
         {
             axios.get('/register')
                 .then(response => {
@@ -318,140 +282,58 @@ export default new Vuex.Store({
                 {
                 })
         },
-        returnbookmut(state,data)
-        {
-            console.log(data);
-            axios
-                .post('/returnbook',data)
-                .then(response => {
-                    var code = response.status;
-                    if(code === 200)
-                    {
-                        this.state.allorderednreserved = response.data;
-                    }
-                })
-                .catch(error =>
-                {
-                })
-        },
-        getallusersbooksmut()
+        getAllUsersBooksMut()
         {
             axios
-                .get('/bookscount')
+                .get('/allOrderedReserved')
                 .then(response => {
                         console.log("This is the response " + response);
-                        this.state.bookscount = response.data;
+                        this.state.allOrderedReserved = response.data;
 
                 })
                 .catch(error =>
                 {
                 })
         },
-        clearOrderFailMut()
-        {
-            this.state.orderfail = " "
-        },
-        clearOrderSuccessMut()
-        {
-            this.state.ordersuccess = " "
-        },
-        clearReserveFailMut()
-        {
-            this.state.reservefail = " "
-        },
-        clearReserveSuccessMut()
-        {
-            this.state.reservesuccess = " "
-        },
-        clearDeleteFailMut()
-        {
-            this.state.deletefail = " "
-        },
-        clearDeleteSuccessMut()
-        {
-            this.state.deletesuccess = " "
-        },
-        clearAddSuccessMut()
-        {
-            this.state.addsuccess = " "
-        },
-        clearAddFailMut()
-        {
-            this.state.addfail = " "
-        },
-        clearAddRoleSuccessMut()
-        {
-            this.state.addrolesuccess= " "
-        },
-        clearAddRoleFailMut()
-        {
-            this.state.addrolefail = " "
-        },
-        clearAddPermSuccessMut()
-        {
-            this.state.addpermsuccess= " "
-        },
-        clearAddPermFailMut()
-        {
-            this.state.addpermfail = " "
-        },
-        getallstatasesmut()
-        {
-            axios.get('/statases')
-                .then(response => {
-                    this.state.statases = response.data;
-                    console.log("This is the data I have gotten in regards to roles " + this.books)
-                })
-                .catch(error =>
-                {
-                })
-        }
         },
     getters:
         {
             getBooks: state => {
                 return state.books
             },
-            getallPermissions:state => {
+            getAllPermissions:state => {
                 return state.permissions
             },
-            getallRolesg:state => {
+            getAllRoles:state => {
                 return state.roles
             },
-            getallpermsroles:state => {
-                return state.permsroles;
+            getAllPermsRoles:state => {
+                return state.permsRoles;
             },
-            getallUsersg:state => {
+            getAllUsers:state => {
                 return state.allUsers;
             },
-            getallorderednreserved:state => {
-                return state.allorderednreserved;
+            getAllOrderedReserved:state => {
+                return state.allOrderedReserved;
             },
-            getbookscount:state => {
-                return state.bookscount;
+            getRolesPerms:state => {
+                return state.rolesPerms
             },
-            getrolesnperms:state => {
-                return state.rolesnperms
-            },
-            returnstatuses:state => {
-                return state.statases;
-            }
-
         },
     actions:
         {
             setPermission({commit},permissions)
             {
-                commit('setPermissionmut',permissions)
+                commit('setPermissionMut',permissions)
             },
-            addbook(state,data)
+            addBook(state,data)
             {
                 // console.log("What I am passing to the database " + name + " " + category + "year of release "  + year + " the url" + url);
-                state.commit('addbookmut',data)
+                state.commit('addBookMut',data)
             },
-            getallbooks(state)
+            getAllBooks(state)
             {
-                state.commit('getallbooksmut')
+                state.commit('getAllBooksMut')
             },
             deleteABook(state,id)
             {
@@ -459,128 +341,65 @@ export default new Vuex.Store({
             },
             addPermission(state,data)
             {
-                state.commit('addPermissionmut',data)
+                state.commit('addPermissionMut',data)
             },
             addRole(state,data)
             {
-                state.commit('addRolemut',data)
+                state.commit('addRoleMut',data)
             },
-            getallPermissions(state)
+            getAllPermissions(state)
             {
-                state.commit('getallPermissionsmut')
+                state.commit('getAllPermissionsMut')
             },
-            getallRoles(state)
+            getAllRoles(state)
             {
-                state.commit('getallRolesmut')
+                state.commit('getAllRolesMut')
             },
-            getallRolesPermissions(state)
+            getAllRolesPermissions(state)
             {
-                state.commit('getallRolesPermissionsmut');
+                state.commit('getAllRolesPermissionsMut');
             },
-            getrolesnperms(state)
+            getRolesPerms(state)
             {
-                state.commit('getrolesnpermsmut');
+                state.commit('getRolesPermsMut');
             },
             getAllUsers(state)
             {
-                state.commit('getAllUsersmut')
+                state.commit('getAllUsersMut')
             },
             assignPermissionToRole(state,data)
             {
-                state.commit('assignPermissionToRolemut',data)
+                state.commit('assignPermissionToRoleMut',data)
             },
             removePermissionToRole(state,data)
             {
-                state.commit('removePermissionToRolemut',data)
+                state.commit('removePermissionToRoleMut',data)
             },
             toggleRoles(state,user)
             {
                 state.commit('toggleRolesMut',user)
             },
-            orderBook(state,book)
-            {
-                state.commit('orderBookmut',book)
-            },
             reserveBook(state,book)
             {
-                state.commit('reserveBookmut',book)
+                state.commit('reserveBookMut',book)
             },
-            getallorderedandreservedbooks(state)
+            loginUser(state)
             {
-                state.commit('getallorderedandreservedbooksmut')
+                state.commit('loginUserMut')
             },
-            loginuser(state)
+            registerUser(state)
             {
-                state.commit('loginusermut')
+                state.commit('registerUserMut')
             },
-            registeruser(state)
+            getAllUsersBooks(state)
             {
-                state.commit('registerusermut')
+                state.commit("getAllUsersBooksMut")
             },
-            returnbook(state,data)
-            {
-                state.commit("returnbookmut",data)
-            },
-            getallusersbooks(state)
-            {
-                state.commit("getallusersbooksmut")
-            },
-            clearOrderFail(state)
-            {
-                state.commit("clearOrderFailMut")
-            },
-            clearOrderSuccess(state)
-            {
-                state.commit("clearOrderSuccessMut")
-            },
-            clearReserveFail(state)
-            {
-                state.commit("clearReserveFailMut")
-            },
-            clearReserveSuccess(state)
-            {
-                state.commit("clearReserveSuccessMut")
-            },
-            clearDeleteFail(state)
-            {
-                state.commit("clearDeleteFailMut")
-            },
-            clearDeleteSuccess(state)
-            {
-                state.commit("clearDeleteSuccessMut")
-            },
-            clearAddSuccess(state)
-            {
-                state.commit("clearAddSuccessMut")
-            },
-            clearAddFail(state)
-            {
-                state.commit("clearAddFailMut")
-            },
-            clearAddRoleSuccess(state)
-            {
-                state.commit("clearAddRoleSuccessMut");
-            },
-            clearAddRoleFailMut(state)
-            {
-                state.commit("clearAddRoleFailMut");
-            },
-            clearAddPermSuccess(state)
-            {
-                state.commit("clearAddPermSuccessMut")
-            },
-            clearAddPermFail(state)
-            {
-               state.commit("clearAddPermFailMut")
-            },
+            
             editABook(state,data)
             {
                 state.commit("editABookMut",data)
             },
-            getallstatasesmut(state)
-            {
-                state.commit("getallstatasesmut");
-            }
 
         },
 

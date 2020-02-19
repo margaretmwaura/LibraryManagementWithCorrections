@@ -45,7 +45,7 @@
                 <v-flex xs6 sm2 md2>
                     <div>Action</div>
                     <div v-if="checkIfReturnIsThere(book.pivot.return_date)">
-                        <v-chip :class="`${checkBookStatus(book.pivot.borrow_date,book.pivot.due_date)}`" @click="returnbook(books,book.email)" >{{checkActionToTake(book.pivot.borrow_date,book.pivot.due_date)}}</v-chip>
+                        <v-chip :class="`${checkBookStatus(book.pivot.borrow_date,book.pivot.due_date)}`" @click="return_book(books,book.email)" >{{checkActionToTake(book.pivot.borrow_date,book.pivot.due_date)}}</v-chip>
                     </div>
                 </v-flex>
                 </v-layout>
@@ -59,6 +59,7 @@
     import {mapGetters} from "vuex";
     import { required, maxLength, email } from 'vuelidate/lib/validators'
     import notificationmixin from "../mixins/notificationmixin";
+    import axios from "axios";
     export default {
         mixins: [validationMixin,notificationmixin],
         validations: {
@@ -115,14 +116,24 @@
                 }
 
             },
-            returnbook(book,email)
+            return_book(book,email)
             {
                 this.form.book = book;
-                this.form.email = email
-                this.$store.dispatch('returnbook',this.form);
+                this.form.email = email;
+                axios
+                    .post('/return_book',this.form)
+                    .then(response => {
+                        let code = response.status;
+                        if(code === 200)
+                        {
+                            this.$store.dispatch('getallorderedandreservedbooks');
+                        }
+                    })
+                    .catch(error =>
+                    {
+                    })
             },
             checkBookStatus(returnDate){
-
               if(returnDate)
               {
                   return 'borrowed'
@@ -134,7 +145,6 @@
             },
             checkActionToTake(reserve, duedate)
             {
-
                 if(reserve === null && duedate !== null)
                 {
                     return "Return"
@@ -171,16 +181,7 @@
         },
 
         watch: {
-            '$store.state.addfail' : function () {
-                console.log("The adding was a fail");
-                this.informwithnotification("Fail" , "You have not added a book");
-                this.$store.dispatch('clearAddFail');
-            },
-            '$store.state.addsuccess' : function () {
-                console.log("The adding was successful");
-                this.informwithnotification("Sucesss" , "You have  added a book");
-                this.$store.dispatch('clearAddSuccess');
-            },
+
         },
 
     }

@@ -35,7 +35,7 @@ Route::post('/toggle','RolesPermissionController@toggleUserRole');
 Route::post('/order_book','BookUsersController@orderBook');
 Route::post('/reserve_book','BookUsersController@reserveBook');
 Route::get('/getallbooks','BookUsersController@getAllBooks');
-Route::post('/returnbook','BookUsersController@return_book');
+Route::post('/return_book','BookUsersController@return_book');
 Route::get('/bookscount','BookUsersController@getBooks');
 Route::get('/emailing','BookUsersController@sendingemails');
 Route::get('/rolenperms','RolesPermissionController@gettingallrolesnadpermissions');

@@ -77,18 +77,24 @@ class BookUsersController extends Controller
         $users = $request->input('book.users');
         Log::info($users);
         Log::info($id);
-        dd($users);
         try{
             foreach ($users as $user)
             {
                 $details = $user['pivot'];
                 $due = $details['due_date'];
-               if($due !== null)
-               {
+                $order = $details['order_date'];
+                Log::info($due);
+                Log::info($order);
+
+                if($due !== null)
+                {
                    $book->users()->wherePivot('due_date', $due)->updateExistingPivot($id, array('return_date'=>Carbon::now()), false);
-                   $book->status_id=Status::GetBookAvailableId();
-                   $book->save();
-               }
+                }
+                if($due === null && $order === null)
+                {
+                  $email = $user['email'];
+                  Log::info("This is the email of the user " . $email);
+                }
             }
         }
         catch (\Exception $e)
