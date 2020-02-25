@@ -71,6 +71,7 @@ class BookUsersController extends Controller
     }
     public function return_book(Request $request)
     {
+        $status_id=Status::GetAwaitingCollectionId();
         $email = $request->input('email');
         $book = Book::find($request->input('book.id'));
         $id = User::where('email',$email)->get()->first()->id;
@@ -94,6 +95,8 @@ class BookUsersController extends Controller
                 {
                   $email = $user['email'];
                   Log::info("This is the email of the user " . $email);
+                  $book->status_id=$status_id;
+                  $book->save();
                 }
             }
         }

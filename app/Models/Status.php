@@ -25,6 +25,10 @@ class Status extends Model
         return $query->where('name','RESERVABLE')->get()->first()->id;
     }
 
+    public function scopeGetAwaitingCollectionId($query)
+    {
+        return $query->where('name','AWAITING COLLECTION')->get()->first()->id;
+    }
     public function scopeGetBookNotAvailableId($query)
     {
         return $query->where('name','NOTAVAILABLE')->get()->first()->id;
