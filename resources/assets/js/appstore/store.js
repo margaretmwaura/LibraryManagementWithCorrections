@@ -245,7 +245,8 @@ export default new Vuex.Store({
             axios
                 .get('/users_books')
                 .then(response => {
-                    this.state.categories = response.data;
+                    this.state.aUsersBooks = response.data;
+                    console.log("The data I have gotten on the users books " , this.state.aUsersBooks);
                 })
                 .catch(error =>
                 {
