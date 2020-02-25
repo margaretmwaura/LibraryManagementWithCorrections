@@ -61,7 +61,8 @@
         {
             return{
                 dialog:false,
-                formAssign:{}
+                formAssign:{},
+                status : true
             }
         },
         computed: {
@@ -203,26 +204,13 @@
             {
                 let $userBooks = this.getAUsersBooks[0];
                 console.log("These are the books I have borrowed " + $userBooks);
-                // if($userBooks.some(book => book.name === this.book.name)){
-                //     console.log("Book was found in the array");
-                //     return false;
-                // } else{
-                //     console.log("No book was found in the array");
-                //     return true;
-                // }
-                for(let i = 0; i <=$userBooks.length; i++){
-
-                    if($userBooks[i].name === this.book.name)
-                    {
-                        console.log("Book was found in the array " + this.book.name +  " and " + $userBooks[i].name);
-                        return false
-                    }
-                    else {
-                        console.log("No book was found in the array " + this.book.name +  " and " + $userBooks[i].name );
-                        return true;
-                    }
+                if($userBooks.some(book => book.name === this.book.name)){
+                    console.log("Book was found in the array");
+                    return false;
+                } else{
+                    console.log("No book was found in the array");
+                    return true;
                 }
-
             }
 
         },
