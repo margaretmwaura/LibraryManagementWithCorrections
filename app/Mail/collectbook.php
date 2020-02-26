@@ -11,16 +11,18 @@ class collectbook extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $name;
+    public $user;
+    public $book;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($name)
+    public function __construct($user,$book)
     {
-        $this->name = $name;
+        $this->user = $user;
+        $this->book = $book;
     }
 
     public function build()

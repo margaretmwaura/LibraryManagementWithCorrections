@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\BookReturned;
 use App\Models\Book;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
 use App\Models\Status;
 
@@ -94,9 +96,15 @@ class BookUsersController extends Controller
                 if($due === null && $order === null)
                 {
                   $email = $user['email'];
+
                   Log::info("This is the email of the user " . $email);
                   $book->status_id=$status_id;
                   $book->save();
+
+                  $user_id = $user['id'];
+                  $user = User::find($user_id);
+                  Log::info("The user " . $user);
+                  Event::fire(new BookReturned($user,$book));
                 }
             }
         }
