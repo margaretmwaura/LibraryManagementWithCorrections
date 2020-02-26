@@ -51,7 +51,10 @@
                 </v-card-actions>
                 </div>
                 <div v-else>
-                    <p>This book will be available for any activities after 24 hours</p>
+                    <v-card-text>
+                        <p>This book will be available for any activities after 24 hours</p>
+                    </v-card-text>
+
                 </div>
             </v-card>
 

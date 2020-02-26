@@ -21,6 +21,9 @@
                 <v-flex xs12 md12 >
                     <div class="cption grey--text">Book Name</div>
                     <div>{{books.name}}</div>
+                    <div v-if="books.is_awaiting_collection">
+                        <v-btn rounded color="primary" dark @click="makeBookAvailable(books)">Make book available</v-btn>
+                    </div>
                 </v-flex>
                 <v-layout row v-for="book in books.users" :key="book.id" class="pa-5" :class="`${checkBookStatus(book.pivot.borrow_date,book.pivot.due_date)}`">
 
@@ -46,8 +49,9 @@
                 </v-flex>
                 <v-flex xs6 sm2 md2>
                     <div>Action</div>
+                     <!-- borrow date is the reserve date and it belongs to those who reserved a book-->
                     <div v-if="checkIfReturnIsThere(book.pivot.return_date)">
-                        <v-chip :class="`${checkBookStatus(book.pivot.borrow_date,book.pivot.due_date)}`" @click="return_book(books,book.email)" >{{checkActionToTake(book.pivot.borrow_date,book.pivot.due_date)}}</v-chip>
+                        <v-chip :class="`${checkBookStatus(book.pivot.borrow_date,book.pivot.due_date)}`" @click="return_book(books,book.email)" >{{checkActionToTake(book,books)}}</v-chip>
                     </div>
                 </v-flex>
                 </v-layout>
@@ -142,6 +146,8 @@
                     {
                     })
             },
+
+            //The statuses should be three return, borrowed and collect
             checkBookStatus(returnDate){
               if(returnDate)
               {
@@ -152,23 +158,28 @@
                   return 'ordered'
               }
             },
-            checkActionToTake(reserve, duedate)
+            checkActionToTake(book,books)
             {
-                if(reserve === null && duedate !== null)
+              let reserve = book.pivot.borrow_date;
+              let due_date = book.pivot.due_date;
+              let is_awaiting_collection = books.is_awaiting_collection;
+                if(reserve === null && due_date !== null)
                 {
+                    console.log("The book should be returned");
                     return "Return"
                 }
-                else if( duedate === null  &&  reserve !== null)
+                if( due_date === null  &&  reserve !== null)
                 {
-                    return "awaiting collect"
-                }
-                else if( reserve !== null && duedate !== null)
-                {
-                    return "return"
-                }
-                else
-                {
-                    return "awaiting collect"
+                    if(is_awaiting_collection === true)
+                    {
+                        console.log("The book is awaiting collection " , is_awaiting_collection);
+                        return "Awaiting collection"
+                    }
+                    else
+                    {
+                        console.log("The book is still reserved " , is_awaiting_collection);
+                        return "Reserved"
+                    }
                 }
             },
             checkIfReturnIsThere(return_date)
@@ -181,6 +192,21 @@
                 {
                     return false
                 }
+            },
+            makeBookAvailable(book)
+            {
+                axios
+                    .post('/make_book_available',book)
+                    .then(response => {
+                        let code = response.status;
+                        if(code === 200)
+                        {
+                            this.$store.dispatch('getAllOrderedAndReservedBooks');
+                        }
+                    })
+                    .catch(error =>
+                    {
+                    })
             }
 
         },

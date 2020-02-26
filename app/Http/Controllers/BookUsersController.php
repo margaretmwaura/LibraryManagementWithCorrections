@@ -133,4 +133,13 @@ class BookUsersController extends Controller
 
        return response()->json(array($collectionBorrowed,$collectionReserved));
     }
+    public function makeBookAvailable(Request $request)
+    {
+        $status_id=Status::GetBookAvailableId();
+        $book = Book::find($request->input('id'));
+        Log::info("This is the info of the book to be made available " . $book);
+        $book->status_id=$status_id;
+        $book->save();
+
+    }
 }
