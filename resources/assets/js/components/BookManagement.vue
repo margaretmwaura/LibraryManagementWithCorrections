@@ -163,6 +163,7 @@
               let reserve = book.pivot.borrow_date;
               let due_date = book.pivot.due_date;
               let is_awaiting_collection = books.is_awaiting_collection;
+              let available = books.is_available;
                 if(reserve === null && due_date !== null)
                 {
                     console.log("The book should be returned");
@@ -170,17 +171,24 @@
                 }
                 if( due_date === null  &&  reserve !== null)
                 {
+
                     if(is_awaiting_collection === true)
                     {
                         console.log("The book is awaiting collection " , is_awaiting_collection);
                         return "Awaiting collection"
                     }
-                    else
+                    if(is_awaiting_collection === false && available === false)
                     {
                         console.log("The book is still reserved " , is_awaiting_collection);
                         return "Reserved"
                     }
+                    if(is_awaiting_collection === false && available === true)
+                    {
+                        console.log("The book is still reserved " , is_awaiting_collection);
+                        return "Did not collect"
+                    }
                 }
+
             },
             checkIfReturnIsThere(return_date)
             {
