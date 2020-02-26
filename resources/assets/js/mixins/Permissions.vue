@@ -46,7 +46,19 @@
                     return true
                 }
             },
-
+            $is_awaiting_collection(status)
+            {
+                if(status === true)
+                {
+                    console.log("Awaiting the user to collect book");
+                    return false
+                }
+                else
+                {
+                    console.log("The book can be borrowed and reserved");
+                    return true
+                }
+            }
 
         },
 

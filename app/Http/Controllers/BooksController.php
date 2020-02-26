@@ -28,6 +28,7 @@ class BooksController extends Controller
     public function index()
     {
         $books=$this->bookRepository->all();
+        dd($books);
         return response()->json($books);
     }
     public function update(Request $request)

@@ -27,6 +27,7 @@
                     </div>
                 </v-card-text>
                 <v-divider></v-divider>
+                <div v-if="$is_awaiting_collection(book.is_awaiting_collection)">
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn v-on:click="deleting(book.id)"  v-if="$can_delete('Delete',book.is_available)">Delete</v-btn>
@@ -48,7 +49,12 @@
                         Close
                     </v-btn>
                 </v-card-actions>
+                </div>
+                <div v-else>
+                    <p>This book will be available for any activities after 24 hours</p>
+                </div>
             </v-card>
+
         </v-dialog>
     </div>
 </template>

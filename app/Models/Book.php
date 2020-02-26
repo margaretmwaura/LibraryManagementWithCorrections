@@ -9,7 +9,7 @@ class Book extends Model
 
     protected $guarded = ['id'];
     protected $with = ['users'];
-    protected $appends = ['is_available','is_reservable','is_not_available'];
+    protected $appends = ['is_available','is_reservable','is_not_available','is_awaiting_collection'];
     public function status()
     {
         return $this->belongsTo(Status::class);
@@ -35,8 +35,8 @@ class Book extends Model
 
     public function getIsReservableAttribute()
     {
-        $is_available = $this->status->id;
-        if($is_available == Status::GetBookReservableId())
+        $is_reservable = $this->status->id;
+        if($is_reservable == Status::GetBookReservableId())
         {
             return true;
         }
@@ -45,8 +45,18 @@ class Book extends Model
 
     public function getIsNotAvailableAttribute()
     {
-        $is_available = $this->status->id;
-        if($is_available == Status::GetBookNotAvailableId())
+        $is_not_available = $this->status->id;
+        if($is_not_available  == Status::GetBookNotAvailableId())
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public function getIsAwaitingCollectionAttribute()
+    {
+        $is_awaiting_collection = $this->status->id;
+        if($is_awaiting_collection == Status::GetBookAwaitingCollectionId())
         {
             return true;
         }

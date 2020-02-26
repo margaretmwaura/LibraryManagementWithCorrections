@@ -33,4 +33,10 @@ class Status extends Model
     {
         return $query->where('name','NOTAVAILABLE')->get()->first()->id;
     }
+
+    public function scopeGetBookAwaitingCollectionId($query)
+    {
+        return $query->where('name','AWAITING COLLECTION')->get()->first()->id;
+    }
+
 }

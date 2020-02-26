@@ -24,9 +24,11 @@ Route::get('/', function () {
 Route::get('/home', 'HomeController@index');
 Route::get('/admin', 'HomeController@admin');
 
+
 Route::resource('books','BooksController');
 Route::resource('permissions','PermissionsController');
 Route::resource('roles','RolesController');
+
 Route::get('/allperms','RolesPermissionController@getAllPerms');
 Route::post('/assign','RolesPermissionController@assignRoles');
 Route::post('/remove','RolesPermissionController@detachingrolesandpermissions');
