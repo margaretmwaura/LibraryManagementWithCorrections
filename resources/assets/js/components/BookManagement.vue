@@ -164,10 +164,21 @@
               let due_date = book.pivot.due_date;
               let is_awaiting_collection = books.is_awaiting_collection;
               let available = books.is_available;
+              let collection_status = book.pivot.collection_status;
                 if(reserve === null && due_date !== null)
                 {
                     console.log("The book should be returned");
-                    return "Return"
+
+                    if(collection_status === 1)
+                    {
+                        return "Return"
+                    }
+                    else
+                    {
+                        // Should have a function to change its status to 1
+                        return "Collect Book"
+                    }
+
                 }
                 if( due_date === null  &&  reserve !== null)
                 {

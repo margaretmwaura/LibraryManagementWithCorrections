@@ -15,8 +15,6 @@ use App\Models\Status;
 class BookUsersController extends Controller
 {
     //Instead of sending out two objects , the user we will be getting is the current user
-
-
     public function orderBook(Request $request)
     {
 
@@ -33,7 +31,7 @@ class BookUsersController extends Controller
 
         $book->status_id=$status_id;
         $book->save();
-        $book->users()->attach($user_id,['due_date'=>$trialExpires,'order_date'=>Carbon::now()]);
+        $book->users()->attach($user_id,['due_date'=>$trialExpires,'order_date'=>Carbon::now(),'collection_status'=>0]);
 
         return response("Success",200);
     }
@@ -45,7 +43,7 @@ class BookUsersController extends Controller
         $book=Book::find($id);
         $book->status_id=$status_id;
         $book->save();
-        $book->users()->attach($user_id,['borrow_date' => Carbon::now()]);
+        $book->users()->attach($user_id,['borrow_date' => Carbon::now(),'status'=>0]);
 
         return response("Success",200);
     }

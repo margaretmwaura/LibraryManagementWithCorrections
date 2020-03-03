@@ -26,7 +26,7 @@ class User extends Authenticatable
 
     public function books()
     {
-        return $this->belongsToMany(Book::class)->withPivot('due_date', 'borrow_date','order_date','return_date')->withTimestamps();
+        return $this->belongsToMany(Book::class)->withPivot('due_date', 'borrow_date','order_date','return_date','collection_status')->withTimestamps();
     }
 
     protected $hidden = [
