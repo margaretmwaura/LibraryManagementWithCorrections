@@ -28,7 +28,7 @@
                 <v-layout row v-for="book in books.users" :key="book.id" class="pa-5" :class="`${checkBookStatus(book.pivot.borrow_date,book.pivot.due_date)}`">
 
                 <v-flex xs6 sm2 md2>
-                    <div class="cption grey--text">Book Reserve Date</div>
+                    <div class="cption grey--text">Book Borrow Date</div>
                     <div>{{book.pivot.borrow_date}}</div>
                 </v-flex>
                 <v-flex xs6 sm2 md2>
@@ -36,8 +36,8 @@
                     <div>{{book.pivot.due_date}}</div>
                 </v-flex>
                 <v-flex xs6 sm2 md2>
-                    <div class="cption grey--text">Book Borrow Date</div>
-                    <div>{{book.pivot.order_date}}</div>
+                    <div class="cption grey--text">Book Reserve Date</div>
+                    <div>{{book.pivot.reserve_date}}</div>
                 </v-flex>
                 <v-flex xs6 sm2 md2>
                     <div class="cption grey--text">Book Email</div>
@@ -51,7 +51,7 @@
                     <div>Action</div>
                      <!-- borrow date is the reserve date and it belongs to those who reserved a book-->
                     <div v-if="checkIfReturnIsThere(book.pivot.return_date)">
-                        <v-chip :class="`${checkBookStatus(book.pivot.borrow_date,book.pivot.due_date)}`" @click="return_book(books,book.email)" >{{checkActionToTake(book,books)}}</v-chip>
+                        <v-chip :class="`${checkBookStatus(book.pivot.borrow_date,book.pivot.due_date)}`" @click="takeAction(book,books,book.email,checkActionToTake(book,books))" >{{checkActionToTake(book,books)}}</v-chip>
                     </div>
                 </v-flex>
                 </v-layout>
@@ -146,7 +146,6 @@
                     {
                     })
             },
-
             //The statuses should be three return, borrowed and collect
             checkBookStatus(returnDate){
               if(returnDate)
@@ -160,11 +159,14 @@
             },
             checkActionToTake(book,books)
             {
-              let reserve = book.pivot.borrow_date;
+              let reserve = book.pivot.reserve_date;
               let due_date = book.pivot.due_date;
+              let status = book.pivot.status;
+              let return_date = book.pivot.return_date;
+              let borrow_date = book.pivot.borrow_date;
               let is_awaiting_collection = books.is_awaiting_collection;
               let available = books.is_available;
-              let collection_status = book.pivot.collection_status;
+              let collection_status = book.pivot.status;
                 if(reserve === null && due_date !== null)
                 {
                     console.log("The book should be returned");
@@ -176,17 +178,17 @@
                     else
                     {
                         // Should have a function to change its status to 1
-                        return "Collect Book"
+                        return "Collect Borrowed Book"
                     }
 
                 }
-                if( due_date === null  &&  reserve !== null)
+                if(due_date === null  &&  reserve !== null)
                 {
 
                     if(is_awaiting_collection === true)
                     {
                         console.log("The book is awaiting collection " , is_awaiting_collection);
-                        return "Awaiting collection"
+                        return "Collect Reserved Book"
                     }
                     if(is_awaiting_collection === false && available === false)
                     {
@@ -199,7 +201,67 @@
                         return "Did not collect"
                     }
                 }
+                if(due_date !== null  &&  reserve !== null)
+                {
+                    if(status === 1 && return_date === null)
+                    {
+                        return "Return"
+                    }
+                }
 
+            },
+            takeAction(book,books,email,action)
+            {
+                console.log("This is the action that is meant to be taken " + action);
+                if(action === 'Collect Borrowed Book')
+                {
+                    axios
+                        .post('/collect_borrowed',book)
+                        .then(response => {
+                            let code = response.status;
+                            if(code === 200)
+                            {
+                                this.$store.dispatch('getAllOrderedAndReservedBooks');
+                            }
+                        })
+                        .catch(error =>
+                        {
+                        })
+                }
+                if(action === 'Return')
+                {
+                    this.form.book = books;
+                    this.form.email = email;
+                    console.log("Returning book ");
+                    axios
+                        .post('/return_book',this.form)
+                        .then(response => {
+                            let code = response.status;
+                            if(code === 200)
+                            {
+                                this.$store.dispatch('getAllOrderedAndReservedBooks');
+                            }
+                        })
+                        .catch(error =>
+                        {
+                        })
+                }
+                if(action === 'Collect Reserved Book')
+                {
+                    console.log(action);
+                    axios
+                        .post('/collect_reserved',book)
+                        .then(response => {
+                            let code = response.status;
+                            if(code === 200)
+                            {
+                                this.$store.dispatch('getAllOrderedAndReservedBooks');
+                            }
+                        })
+                        .catch(error =>
+                        {
+                        })
+                }
             },
             checkIfReturnIsThere(return_date)
             {

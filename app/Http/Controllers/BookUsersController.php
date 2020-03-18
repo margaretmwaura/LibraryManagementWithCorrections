@@ -15,10 +15,10 @@ use App\Models\Status;
 class BookUsersController extends Controller
 {
     //Instead of sending out two objects , the user we will be getting is the current user
-    public function orderBook(Request $request)
+    public function borrowBook(Request $request)
     {
 
-        $status_id=Status::GetBookReservableId();
+        $status_id=Status::GetBookBorrowedNotCollectedId();
 
         Log::info("This is the book not available id " . $status_id);
         $id=$request->input("id");
@@ -31,7 +31,7 @@ class BookUsersController extends Controller
 
         $book->status_id=$status_id;
         $book->save();
-        $book->users()->attach($user_id,['due_date'=>$trialExpires,'order_date'=>Carbon::now(),'collection_status'=>0]);
+        $book->users()->attach($user_id,['due_date'=>$trialExpires,'borrow_date'=>Carbon::now()]);
 
         return response("Success",200);
     }
@@ -43,7 +43,7 @@ class BookUsersController extends Controller
         $book=Book::find($id);
         $book->status_id=$status_id;
         $book->save();
-        $book->users()->attach($user_id,['borrow_date' => Carbon::now(),'status'=>0]);
+        $book->users()->attach($user_id,['reserve_date' => Carbon::now()]);
 
         return response("Success",200);
     }
@@ -71,45 +71,54 @@ class BookUsersController extends Controller
     }
     public function return_book(Request $request)
     {
-        $status_id=Status::GetAwaitingCollectionId();
+        Log::info("These is the request " . $request);
+        $flag = false;
+        $collecting_status_id=Status::GetBookAwaitingCollectionId();
+        $available_status_id = Status::GetBookAvailableId();
         $email = $request->input('email');
         $book = Book::find($request->input('book.id'));
         $id = User::where('email',$email)->get()->first()->id;
         $users = $request->input('book.users');
         Log::info($users);
         Log::info($id);
-        try{
-            foreach ($users as $user)
-            {
-                $details = $user['pivot'];
-                $due = $details['due_date'];
-                $order = $details['order_date'];
-                Log::info($due);
-                Log::info($order);
 
-                if($due !== null)
+            try{
+                foreach ($users as $user)
                 {
-                   $book->users()->wherePivot('due_date', $due)->updateExistingPivot($id, array('return_date'=>Carbon::now()), false);
-                }
-                if($due === null && $order === null)
-                {
-                  $email = $user['email'];
+                    $details = $user['pivot'];
+                    $due = $details['due_date'];
+                    $borrow_date = $details['borrow_date'];
 
-                  Log::info("This is the email of the user " . $email);
-                  $book->status_id=$status_id;
-                  $book->save();
+                    if($due !== null)
+                    {
+                        $book->users()->wherePivot('due_date', $due)->updateExistingPivot($id, array('return_date'=>Carbon::now()), false);
+                    }
+                    if($due === null && $borrow_date === null)
+                    {
+                        $email = $user['email'];
 
-                  $user_id = $user['id'];
-                  $user = User::find($user_id);
-                  Log::info("The user " . $user);
-                  Event::fire(new BookReturned($user,$book));
+                        Log::info("This is the email of the user " . $email);
+                        $book->status_id=$collecting_status_id;
+                        $book->save();
+                        $flag = true;
+                        $user_id = $user['id'];
+                        $user = User::find($user_id);
+                        Log::info("The user " . $user);
+//                        Event::fire(new BookReturned($user,$book));
+                    }
                 }
             }
-        }
-        catch (\Exception $e)
-        {
-            Log::info("The reasons for not getting the collection " . $e->getMessage());
-        }
+            catch (\Exception $e)
+            {
+                Log::info("The reasons for not getting the collection " . $e->getMessage());
+            } finally {
+                if($flag == false)
+                {
+                    $book->status_id = $available_status_id;
+                    $book->save();
+                }
+            }
+
     }
     public function getBooks()
     {
@@ -119,9 +128,12 @@ class BookUsersController extends Controller
         $collectionBorrowed = collect([]);
         $collectionReserved = collect([]);
         $count->each(function ($item, $key) use ($collectionBorrowed,$collectionReserved){
-           if($item->pivot->due_date)
+           if($item->pivot->due_date && $item->pivot->borrow_date)
            {
-               $collectionBorrowed->push($item);
+               if($item->pivot->status == 0)
+               {
+                   $collectionBorrowed->push($item);
+               }
            }
            else{
                $collectionReserved->push($item);
@@ -140,4 +152,58 @@ class BookUsersController extends Controller
         $book->save();
 
     }
+    public function collectBorrowedBook(Request $request)
+    {
+        $status_id=Status::GetBookReservableId();
+        $book_details = $request->input('pivot');
+        Log::info("The data sent the user id " . $request->input('id') . "and the pivot data is " . $book_details['book_id'] .
+            " this is the due date " . $book_details['due_date']);
+        $book = Book::find($book_details['book_id']);
+
+        $book->status_id=$status_id;
+        $book->save();
+        $book->users()->wherePivot('status', 0 )
+                      ->wherePivot('due_date',$book_details['due_date'])
+                      ->updateExistingPivot($request->input('id'), array('status'=>1), false);
+
+    }
+
+    public function collectReservedBook(Request $request)
+    {
+        Log::info("This is the received request " . $request->input('email'));
+
+        $book_details = $request->input('pivot');
+
+        $book_id = $book_details['book_id'];
+
+        $user_email = $request->input('email');
+
+        Log::info("This is the book id  " . $book_id );
+
+        $status_id=Status::GetBookReservableId();
+
+        Log::info("This is the book reservable id " . $status_id);
+
+        $user = User::where('email', $user_email)->firstOrFail();
+
+        Log::info("This is the user gotten " . $user->id);
+        $user_id = $user->id;
+        $current=Carbon::now();
+        $trialExpires=$current->addDays(14);
+
+        $book=Book::find($book_id);
+
+        $book->status_id=$status_id;
+
+        $book->save();
+
+        $book->users()->wherePivot('status', 0 )
+             ->wherePivot('reserve_date',$book_details['reserve_date'])
+             ->updateExistingPivot($user_id, array('status'=>1,'due_date'=>$trialExpires,'borrow_date'=>Carbon::now()), false);
+
+        return response("Success",200);
+    }
+
+    //should have a function for toggling the collection status
+
 }

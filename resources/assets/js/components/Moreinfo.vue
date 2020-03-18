@@ -114,7 +114,7 @@
                     .catch(error =>
                     {
 
-                    })
+                    });
                 this.dialog = false;
             },
             editing(book)
@@ -213,13 +213,17 @@
             {
                 let $userBooks = this.getAUsersBooks[0];
                 console.log("These are the books I have borrowed " + $userBooks);
-                if($userBooks.some(book => book.name === this.book.name)){
-                    console.log("Book was found in the array");
-                    return false;
-                } else{
-                    console.log("No book was found in the array");
-                    return true;
+                if($userBooks != null)
+                {
+                    if($userBooks.some(book => book.name === this.book.name)){
+                        console.log("Book was found in the array");
+                        return false;
+                    } else{
+                        console.log("No book was found in the array");
+                        return true;
+                    }
                 }
+
             }
 
         },
