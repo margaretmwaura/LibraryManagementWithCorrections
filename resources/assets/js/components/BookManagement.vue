@@ -164,9 +164,11 @@
               let status = book.pivot.status;
               let return_date = book.pivot.return_date;
               let borrow_date = book.pivot.borrow_date;
+              let deleted_at = book.pivot.deleted_at;
               let is_awaiting_collection = books.is_awaiting_collection;
               let available = books.is_available;
               let collection_status = book.pivot.status;
+              console.log("This is the deleted at value " + deleted_at)
                 if(reserve === null && due_date !== null)
                 {
                     console.log("The book should be returned");
@@ -178,7 +180,15 @@
                     else
                     {
                         // Should have a function to change its status to 1
-                        return "Collect Borrowed Book"
+                        if(deleted_at !== null)
+                        {
+                           return  "Book Borrowing Cancelled"
+                        }
+                        else
+                            {
+                            return "Collect Borrowed Book"
+                        }
+
                     }
 
                 }
@@ -188,12 +198,26 @@
                     if(is_awaiting_collection === true)
                     {
                         console.log("The book is awaiting collection " , is_awaiting_collection);
-                        return "Collect Reserved Book"
+                        if(deleted_at !== null)
+                        {
+                            return  "Book Reserving Cancelled"
+                        }
+                        else {
+                            return "Collect Reserved Book"
+                        }
+
                     }
                     if(is_awaiting_collection === false && available === false)
                     {
                         console.log("The book is still reserved " , is_awaiting_collection);
-                        return "Reserved"
+                        if(deleted_at != null)
+                        {
+                            return  "Book Reserving Cancelled"
+                        }
+                        else {
+                            return "Reserved"
+                        }
+
                     }
                     if(is_awaiting_collection === false && available === true)
                     {

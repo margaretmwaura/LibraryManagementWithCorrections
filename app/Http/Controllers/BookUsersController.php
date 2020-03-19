@@ -49,6 +49,7 @@ class BookUsersController extends Controller
     public function getAllBooks()
     {
         $book_collection=Book::has('users')->get();
+        Log::info("This are all the books which have users " . $book_collection);
         return response()->json($book_collection);
     }
     public function sending_emails()
@@ -122,8 +123,7 @@ class BookUsersController extends Controller
     public function getBooks()
     {
         $user=User::find(Auth::user()->id);
-        $count=$user->books;
-        Log::info("We are trying to get count ".$count);
+        $count=$user->books()->whereNull('book_user.deleted_at')->get();
         $collectionBorrowed = collect([]);
         $collectionReserved = collect([]);
         $count->each(function ($item, $key) use ($collectionBorrowed,$collectionReserved){
@@ -163,7 +163,6 @@ class BookUsersController extends Controller
         {
             Log::info("Records not updated " . $exception);
         }
-
 
         $book->status_id=$status_id;
         $book->save();
@@ -223,13 +222,14 @@ class BookUsersController extends Controller
     {
 
         Log::info("Cancelling book borrowing request data " . $request->input('id'));
+        $current=Carbon::now();
         $user_id=Auth::user()->id;
         $book_id = $request->input('id');
         $book=Book::find($book_id);
         $book->users()
             ->wherePivot('due_date', '!=' , null )
             ->wherePivot('borrow_date','!=', null)
-            ->updateExistingPivot($user_id, array('status'=>1,'return_date' => null), false);
+            ->updateExistingPivot($user_id, array('deleted_at'=>$current), false);
 
         $status_id=Status::GetBookAvailableId();
         $book->status_id=$status_id;
@@ -239,12 +239,13 @@ class BookUsersController extends Controller
     public function cancelBookReserving(Request $request)
     {
         Log::info("Cancelling book reserving request data " . $request->input('id'));
+        $current=Carbon::now();
         $user_id=Auth::user()->id;
         $book_id = $request->input('id');
         $book=Book::find($book_id);
         $book->users()
             ->wherePivot('reserve_date', '!=' , null )
-            ->updateExistingPivot($user_id, array('status'=>1,'borrow_date'=>null,'due_date'=>null,'return_date' => null), false);
+            ->updateExistingPivot($user_id, array('deleted_at'=>$current), false);
 
         $status_id=Status::GetBookReservableId();
         $book->status_id=$status_id;
