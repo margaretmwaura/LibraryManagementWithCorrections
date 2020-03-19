@@ -144,9 +144,27 @@ class BookUsersController extends Controller
     }
     public function makeBookAvailable(Request $request)
     {
+        Log::info("This is the data for not collected book request " . $request);
         $status_id=Status::GetBookAvailableId();
         $book = Book::find($request->input('id'));
-        Log::info("This is the info of the book to be made available " . $book);
+        try {
+            $user = $book->users()
+                ->wherePivot('reserve_date', '!=' , null )
+                ->wherePivot('borrow_date','=', null)
+                ->firstOrFail();
+
+            Log::info("The user retrieved " . $user);
+            $book->users()
+                ->wherePivot('reserve_date', '!=' , null )
+                ->wherePivot('borrow_date','=', null)
+                ->updateExistingPivot($user->id, array('status'=>1,'borrow_date'=>null,'due_date'=>null,'return_date' => null), false);
+        }
+        catch (\Exception $exception)
+        {
+            Log::info("Records not updated " . $exception);
+        }
+
+
         $book->status_id=$status_id;
         $book->save();
 
@@ -166,7 +184,6 @@ class BookUsersController extends Controller
                       ->updateExistingPivot($request->input('id'), array('status'=>1), false);
 
     }
-
     public function collectReservedBook(Request $request)
     {
         Log::info("This is the received request " . $request->input('email'));
@@ -201,6 +218,37 @@ class BookUsersController extends Controller
              ->updateExistingPivot($user_id, array('status'=>1,'due_date'=>$trialExpires,'borrow_date'=>Carbon::now()), false);
 
         return response("Success",200);
+    }
+    public function cancelBookBorrowing(Request $request)
+    {
+
+        Log::info("Cancelling book borrowing request data " . $request->input('id'));
+        $user_id=Auth::user()->id;
+        $book_id = $request->input('id');
+        $book=Book::find($book_id);
+        $book->users()
+            ->wherePivot('due_date', '!=' , null )
+            ->wherePivot('borrow_date','!=', null)
+            ->updateExistingPivot($user_id, array('status'=>1,'return_date' => null), false);
+
+        $status_id=Status::GetBookAvailableId();
+        $book->status_id=$status_id;
+        $book->save();
+
+    }
+    public function cancelBookReserving(Request $request)
+    {
+        Log::info("Cancelling book reserving request data " . $request->input('id'));
+        $user_id=Auth::user()->id;
+        $book_id = $request->input('id');
+        $book=Book::find($book_id);
+        $book->users()
+            ->wherePivot('reserve_date', '!=' , null )
+            ->updateExistingPivot($user_id, array('status'=>1,'borrow_date'=>null,'due_date'=>null,'return_date' => null), false);
+
+        $status_id=Status::GetBookReservableId();
+        $book->status_id=$status_id;
+        $book->save();
     }
 
     //should have a function for toggling the collection status

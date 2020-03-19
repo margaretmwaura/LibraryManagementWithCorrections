@@ -41,6 +41,10 @@ Route::post('/return_book','BookUsersController@return_book');
 Route::get('/users_books','BookUsersController@getBooks');
 Route::post('/collect_borrowed','BookUsersController@collectBorrowedBook');
 Route::post('/collect_reserved','BookUsersController@collectReservedBook');
+
+Route::post('/cancel_borrow','BookUsersController@cancelBookBorrowing');
+Route::post('/cancel_reserve','BookUsersController@cancelBookReserving');
+
 Route::get('/emailing','BookUsersController@sendingemails');
 Route::get('/rolenperms','RolesPermissionController@gettingallrolesnadpermissions');
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');

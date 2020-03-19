@@ -28,7 +28,7 @@
                         <div>{{books.pivot.return_date}}</div>
                     </v-flex>
                 <v-flex xs6 sm2 md2>
-                    <v-chip>Cancel Book Borrowing</v-chip>
+                    <v-chip @click="cancel_borrowing(books)">Cancel Book Borrowing</v-chip>
                 </v-flex>
                 </v-layout>
         </v-card>
@@ -55,7 +55,7 @@
                         <div>{{books.pivot.due_date}}</div>
                     </v-flex>
                     <v-flex xs6 sm2 md2>
-                        <v-chip>Cancel Book Reserving</v-chip>
+                        <v-chip @click="cancel_reserving(books)">Cancel Book Reserving</v-chip>
                     </v-flex>
             </v-layout>
         </v-card>
@@ -65,14 +65,59 @@
 
 <script>
     import {mapGetters} from "vuex";
+    import axios from "axios";
+    import notificationmixin from "../mixins/notificationmixin";
+    import {validationMixin} from "vuelidate";
     export default {
         name: "MyAccount",
+        mixins: [validationMixin,notificationmixin],
         computed: {
             ...mapGetters(['getAUsersBooks']),
         },
         mounted() {
             this.$store.dispatch('getAUsersBooks');
         },
+        methods : {
+
+            cancel_borrowing(book)
+            {
+                console.log("Cancelling the book borrowing ");
+                axios
+                    .post('/cancel_borrow',book)
+                    .then(response => {
+                        let code = response.status;
+                        if(code === 200)
+                        {
+                            this.informwithnotification("Status" , "Successful , you have cancelled borrowing the book");
+                            this.$store.dispatch('getAUsersBooks');
+                        }
+
+                    })
+                    .catch(error =>
+                    {
+
+                    })
+            },
+            cancel_reserving(book)
+            {
+                console.log("Cancelling the book reserving ");
+                axios
+                    .post('/cancel_reserve',book)
+                    .then(response => {
+                        let code = response.status;
+                        if(code === 200)
+                        {
+                            this.informwithnotification("Status" , "Successful , you have cancelled reserving the book");
+                            this.$store.dispatch('getAUsersBooks');
+                        }
+
+                    })
+                    .catch(error =>
+                    {
+
+                    })
+            }
+        }
     }
 </script>
 

@@ -27,6 +27,15 @@
                             <p id="title_h">Display</p></v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
+                <v-list-item router to="/my_account">
+                    <v-list-item-icon>
+                        <v-icon class="white--text">mdi-view-dashboard</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content>
+                        <v-list-item-title class="white--text">
+                            <p id="title_a">My Account</p></v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
             </v-list>
 
 
@@ -55,13 +64,7 @@
         font-size:16px;
         color:black;
     }
-
-    #title_o
-    {
-        font-size:16px;
-        color:white;
-    }
-    #title_t
+    #title_a
     {
         font-size:16px;
         color:white;
