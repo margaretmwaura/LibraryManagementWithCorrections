@@ -9,12 +9,13 @@
             </v-flex>
         </v-card>
 
-        <v-card class="pa-5" v-for="(books,index) in getAUsersBooks[0]" :key="index">
-            <v-layout row>
-                <v-flex xs12 md12 >
-                    <div class="cption grey--text">Book Name</div>
-                    <div>{{books.name}}</div>
-                </v-flex>
+        <div v-if="getAUsersBooks[0] != null">
+            <v-card class="pa-5" v-for="(books,index) in getAUsersBooks[0]" :key="index">
+                <v-layout row>
+                    <v-flex xs12 md12 >
+                        <div class="cption grey--text">Book Name</div>
+                        <div>{{books.name}}</div>
+                    </v-flex>
                     <v-flex xs6 sm2 md2>
                         <div class="cption grey--text">Book Borrow Date</div>
                         <div>{{books.pivot.borrow_date}}</div>
@@ -27,11 +28,13 @@
                         <div class="cption grey--text">Book Return Date</div>
                         <div>{{books.pivot.return_date}}</div>
                     </v-flex>
-                <v-flex xs6 sm2 md2>
-                    <v-chip @click="cancel_borrowing(books)">Cancel Book Borrowing</v-chip>
-                </v-flex>
+                    <v-flex xs6 sm2 md2>
+                        <v-chip @click="cancel_borrowing(books)">Cancel Book Borrowing</v-chip>
+                    </v-flex>
                 </v-layout>
-        </v-card>
+            </v-card>
+        </div>
+
 
         <v-card>
             <v-flex xs12 md12 >
@@ -40,6 +43,7 @@
                 </div>
             </v-flex>
         </v-card>
+        <div v-if="getAUsersBooks[1] != null">
         <v-card class="pa-5" v-for="(books,index) in getAUsersBooks[1]" :key="index">
             <v-layout row>
                 <v-flex xs12 md12 >
@@ -59,6 +63,7 @@
                     </v-flex>
             </v-layout>
         </v-card>
+        </div>
     </div>
 
 </template>

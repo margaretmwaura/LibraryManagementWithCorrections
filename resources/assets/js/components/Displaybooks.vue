@@ -9,9 +9,9 @@
                         </v-toolbar>
                     </template>
 
-                    <template v-slot:default="props">
+                    <template v-slot:default="proBps">
                         <v-row>
-                            <v-col v-for="item in props.items"  :key="item.name" cols="12" sm="6" md="4" lg="4">
+                            <v-col v-for="item in getBooks"  :key="item.name" cols="12" sm="6" md="4" lg="4">
                                 <v-card>
                                     <v-card-title class="subheading font-weight-bold">{{ item.name }}</v-card-title>
                                     <v-divider></v-divider>
@@ -56,7 +56,6 @@
 
     export default {
         name: "display_books",
-
         components: {
                 MoreInfo
             },
@@ -72,10 +71,9 @@
         mounted() {
             this.$store.dispatch('getAllBooks');
             this.$store.dispatch('getAUsersBooks');
-
+            this.listenForChanges();
         },
         methods:{
-
             nextPage () {
                 if (this.page + 1 <= this.numberOfPages) this.page += 1
             },
@@ -85,6 +83,14 @@
             updateItemsPerPage (number) {
                 this.itemsPerPage = number
             },
+            listenForChanges()
+            {
+                Echo.channel('books').listen('BookUsersUpdated',(e) =>{
+                         console.log("An event from laravel " + e);
+                         this.$store.state.books = e;
+
+                })
+            }
         },
         data()
         {

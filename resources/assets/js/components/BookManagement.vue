@@ -239,52 +239,16 @@
                 console.log("This is the action that is meant to be taken " + action);
                 if(action === 'Collect Borrowed Book')
                 {
-                    axios
-                        .post('/collect_borrowed',book)
-                        .then(response => {
-                            let code = response.status;
-                            if(code === 200)
-                            {
-                                this.$store.dispatch('getAllOrderedAndReservedBooks');
-                            }
-                        })
-                        .catch(error =>
-                        {
-                        })
+                    this.collectBorrowedBook(book)
                 }
                 if(action === 'Return')
                 {
-                    this.form.book = books;
-                    this.form.email = email;
-                    console.log("Returning book ");
-                    axios
-                        .post('/return_book',this.form)
-                        .then(response => {
-                            let code = response.status;
-                            if(code === 200)
-                            {
-                                this.$store.dispatch('getAllOrderedAndReservedBooks');
-                            }
-                        })
-                        .catch(error =>
-                        {
-                        })
+                    this.return_book(books,email)
                 }
                 if(action === 'Collect Reserved Book')
                 {
                     console.log(action);
-                    axios
-                        .post('/collect_reserved',book)
-                        .then(response => {
-                            let code = response.status;
-                            if(code === 200)
-                            {
-                                this.$store.dispatch('getAllOrderedAndReservedBooks');
-                            }
-                        })
-                        .catch(error =>
-                        {
-                        })
+                    this.collectingReservedBook(book)
                 }
             },
             checkIfReturnIsThere(return_date)
@@ -302,6 +266,36 @@
             {
                 axios
                     .post('/make_book_available',book)
+                    .then(response => {
+                        let code = response.status;
+                        if(code === 200)
+                        {
+                            this.$store.dispatch('getAllOrderedAndReservedBooks');
+                        }
+                    })
+                    .catch(error =>
+                    {
+                    })
+            },
+            collectingReservedBook(book)
+            {
+                axios
+                    .post('/collect_reserved',book)
+                    .then(response => {
+                        let code = response.status;
+                        if(code === 200)
+                        {
+                            this.$store.dispatch('getAllOrderedAndReservedBooks');
+                        }
+                    })
+                    .catch(error =>
+                    {
+                    })
+            },
+            collectBorrowedBook(book)
+            {
+                axios
+                    .post('/collect_borrowed',book)
                     .then(response => {
                         let code = response.status;
                         if(code === 200)

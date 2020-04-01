@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\BookReturned;
+use App\Events\BookUsersUpdated;
 use App\Models\Book;
 use App\Models\User;
 use Carbon\Carbon;
@@ -32,6 +33,7 @@ class BookUsersController extends Controller
         $book->save();
         $book->users()->attach($user_id,['due_date'=>$trialExpires,'borrow_date'=>Carbon::now()]);
 
+        $this->updatingTheUI();
         return response("Success",200);
     }
     public function reserveBook(Request $request)
@@ -44,6 +46,7 @@ class BookUsersController extends Controller
         $book->save();
         $book->users()->attach($user_id,['reserve_date' => Carbon::now()]);
 
+        $this->updatingTheUI();
         return response("Success",200);
     }
     public function getAllBooks()
@@ -81,7 +84,6 @@ class BookUsersController extends Controller
         $users = $request->input('book.users');
         Log::info($users);
         Log::info($id);
-
             try{
                 foreach ($users as $user)
                 {
@@ -114,9 +116,11 @@ class BookUsersController extends Controller
             } finally {
                 if($flag == false)
                 {
+
                     $book->status_id = $available_status_id;
                     $book->save();
                 }
+                $this->updatingTheUI();
             }
 
     }
@@ -166,6 +170,7 @@ class BookUsersController extends Controller
 
         $book->status_id=$status_id;
         $book->save();
+        $this->updatingTheUI();
 
     }
     public function collectBorrowedBook(Request $request)
@@ -181,6 +186,8 @@ class BookUsersController extends Controller
         $book->users()->wherePivot('status', 0 )
                       ->wherePivot('due_date',$book_details['due_date'])
                       ->updateExistingPivot($request->input('id'), array('status'=>1), false);
+
+        $this->updatingTheUI();
 
     }
     public function collectReservedBook(Request $request)
@@ -216,6 +223,7 @@ class BookUsersController extends Controller
              ->wherePivot('reserve_date',$book_details['reserve_date'])
              ->updateExistingPivot($user_id, array('status'=>1,'due_date'=>$trialExpires,'borrow_date'=>Carbon::now()), false);
 
+        $this->updatingTheUI();
         return response("Success",200);
     }
     public function cancelBookBorrowing(Request $request)
@@ -235,6 +243,8 @@ class BookUsersController extends Controller
         $book->status_id=$status_id;
         $book->save();
 
+        $this->updatingTheUI();
+
     }
     public function cancelBookReserving(Request $request)
     {
@@ -250,6 +260,13 @@ class BookUsersController extends Controller
         $status_id=Status::GetBookReservableId();
         $book->status_id=$status_id;
         $book->save();
+
+        $this->updatingTheUI();
+    }
+
+    public function updatingTheUI()
+    {
+        event(new BookUsersUpdated(Book::all()->toArray()));
     }
 
     //should have a function for toggling the collection status
