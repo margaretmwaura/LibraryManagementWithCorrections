@@ -1,12 +1,12 @@
-import Add_book from "../components/Add_book";
-import Edit_book from "../components/Edit_book";
-import Display_books from "../components/Displaybooks";
-import Dashboard from "../components/Dashboard";
+import Add_book from "../components/book_management/Add_book";
+import Edit_book from "../components/book_management/Edit_book";
+import Display_books from "../components/display/Displaybooks";
+import Dashboard from "../components/book_management/Dashboard";
 import Vue from "vue";
 import VueRouter from "vue-router";
-import RolesAndPermissions from "../components/RolesAndPermissions";
-import BookManagement from "../components/BookManagement";
-import MyAccount from "../components/MyAccount";
+import RolesAndPermissions from "../components/roles_permissions/RolesAndPermissions";
+import BookManagement from "../components/book_management/BookManagement";
+import MyAccount from "../components/display/MyAccount";
 Vue.use(VueRouter);
 
 
