@@ -9,7 +9,7 @@
                     Privacy Policy
                 </v-card-title>
                 <v-card-text>
-                    <v-autocomplete v-model="formAssign.role" :items="getallRolesg" label="role"
+                    <v-autocomplete v-model="formAssign.role" :items="getAllRoles" label="role"
                               required>
                     </v-autocomplete>
                 </v-card-text>
@@ -38,7 +38,7 @@
             }
         },
         computed: {
-            ...mapGetters(['getallRolesg']),
+            ...mapGetters(['getAllRoles']),
         },
         props: {
             user: Array,

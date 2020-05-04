@@ -14,6 +14,7 @@ class User extends Authenticatable
         'name', 'email', 'password',
     ];
 
+    protected $appends = ['role_name'];
     public function department()
     {
         return $this->belongsTo(Department::class);
@@ -29,6 +30,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Book::class)->withPivot('due_date', 'borrow_date','reserve_date','return_date','status','deleted_at')->withTimestamps();
     }
 
+    public function getRoleNameAttribute()
+    {
+        $role_name = $this->role->name;
+        return $role_name;
+    }
     protected $hidden = [
         'password', 'remember_token',
     ];

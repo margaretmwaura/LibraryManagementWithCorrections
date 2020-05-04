@@ -21,10 +21,10 @@
             <v-flex md12>
                 <p>Connect or disconnect roles and permissions </p>
                 <form>
-                    <v-autocomplete v-model="formAssign.role" :items="getallRolesg"  label="Role"
+                    <v-autocomplete v-model="formAssign.role" :items="getAllRoles"  label="Role"
                               required>
                     </v-autocomplete>
-                    <v-autocomplete v-model="formAssign.permission" :items="getallPermissions"  label="Permission"
+                    <v-autocomplete v-model="formAssign.permission" :items="getAllPermissions"  label="Permission"
                     > </v-autocomplete>
                     <v-btn class="mr-4" @click="assign">Connect </v-btn>
                     <v-btn class="mr-4" @click="remove">Disconnect </v-btn>
@@ -35,7 +35,7 @@
         <v-layout row >
 
                  <v-flex>
-                    <div v-for="role in getrolesnperms">
+                    <div v-for="role in getRolesPerms">
                         <p>The role <span style="color: indianred">{{role.name}}</span> has permissions</p>
                            <div v-for="perm in role.permissions" style="display: inline-block ; margin-right:10px">
                                <p> <span style="color : indigo"> {{perm.name}} </span></p>
@@ -43,8 +43,8 @@
                     </div>
                  </v-flex>
         </v-layout>
-        <v-card class="pa-5" v-for="user in getallUsersg" :key="user.id">
-                <v-layout row :class="`${roleidname(user.role_id)}`">
+        <v-card class="pa-5" v-for="user in getAllUsers" :key="user.id">
+                <v-layout row :class="``">
                     <v-flex xs12 md6 >
                         <div class="cption grey--text">Name of user</div>
                         <div>{{user.id}}</div>
@@ -55,14 +55,11 @@
                     </v-flex>
                     <v-flex xs6 sm4 md2>
                         <div class="cption grey--text">User Role</div>
-                        <div>{{roleidname(user.role_id)}}</div>
+                        <div>{{user.role_name}}</div>
                     </v-flex>
                     <v-flex xs6 sm4 md2>
                         <div class="cption grey--text">Change Status</div>
                         <div>
-<!--                                                    <v-chip small :class="`${roleidname(user.role_id)} white&#45;&#45;text caption my-2`">-->
-<!--                                                    Change role status-->
-<!--                                                   </v-chip>-->
                             <popup :user="user"></popup>
                         </div>
                     </v-flex>
@@ -108,7 +105,7 @@
             }
         },
         computed: {
-            ...mapGetters(['getallPermissions','getallRolesg','getallpermsroles','getallUsersg','getrolesnperms']),
+            ...mapGetters(['getAllRoles','getAllPermissions','getAllUsers','getRolesPerms']),
             selectErrors () {
                 const errors = [];
                 if (!this.$v.select.$dirty) return errors
@@ -150,38 +147,17 @@
                 console.log("What we will be using for the assigning" + this.formAssign);
                 this.$store.dispatch('removePermissionToRole',this.formAssign);
             },
-            togglingPermissions: function(user)
-            {
-                console.log("This is the choosen permission " + this.formChange.role);
-                this.$store.dispatch('toggleRoles',user);
-            },
-            roleidname(id)
-            {
-
-                if(id === 36)
-                {
-                    return "User";
-                }
-                if(id === 35)
-                {
-                    return "Normal";
-                }
-                if(id === 37)
-                {
-                    return "Admin"
-                }
-            },
             showSubscriptions() {
                 console.log("Opening the modal " + this.showModal);
                 this.showModal = true;
             },
         },
         mounted() {
-            this.$store.dispatch('getallRolesPermissions');
-            this.$store.dispatch('getallRoles');
-            this.$store.dispatch('getallPermissions');
+            this.$store.dispatch('getAllRolesPermissions');
+            this.$store.dispatch('getAllRoles');
+            this.$store.dispatch('getAllPermissions');
             this.$store.dispatch('getAllUsers');
-            this.$store.dispatch('getrolesnperms');
+            this.$store.dispatch('getRolesPerms');
         },
         watch: {
             '$store.state.addrolesuccess' : function () {
