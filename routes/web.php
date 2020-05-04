@@ -57,4 +57,4 @@ Route::get('/index','PdfController@index');
 Route::post('/books_edit','BooksController@update');
 Route::post('/make_book_available','BookUsersController@makeBookAvailable');
 Route::get('/categories','CategoryController@index');
-
+Route::get('/register_js','LoginRegisterController@index');
